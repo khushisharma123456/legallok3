@@ -134,7 +134,7 @@ def lawyer_dashboard():
 
     lawyer_id = session.get('lawyer_id')
     lawyer = Lawyer.query.get(lawyer_id)
-    return render_template('lawyer dashboard.html', lawyer=lawyer)
+    return render_template('lawyer dashboard (1).html', lawyer=lawyer)
 
 
 @app.route('/dashboard')
@@ -177,6 +177,14 @@ def form_filling():
 @app.route('/form_filled')
 def form_filled():
     return render_template('filled forms.html')
+
+@app.route('/lawyer_cases')
+def lawyer_cases():
+    return render_template('lawyer cases.html')
+
+@app.route('/lawyer_settings')
+def lawyer_settings():
+    return render_template('lawyer settings.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
