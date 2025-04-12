@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Lok - Ask a Question</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reuse existing styles from dashboard.css */
+        :root {
+            --primary-color: #7d423b;
+            --secondary-color: #8d5521;
+            --accent-color:#ce7226;
+            --dark-color: #1a2639;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .top-nav-left, .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 0.5rem 0;
+            width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .user-profile.active .profile-dropdown {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-dropdown a, .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-dropdown a:hover, .profile-dropdown button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .logout-btn {
+            color: var(--danger-color);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 1.5rem 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            transition: var(--transition);
+            z-index: 900;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            margin: 0.2rem 0;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-light);
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+            color: var(--primary-color);
+        }
+
+        .sidebar-item.active {
+            background-color: rgba(74, 111, 165, 0.2);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar-item i {
+            margin-right: 1rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-item .badge {
+            margin-left: auto;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content */
+        .content-area {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        /* Ask Question Page Specific Styles */
+        .ask-question-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+        }
+
+        .back-btn {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .question-form {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .category-option {
+            display: none;
+        }
+
+        .category-label {
+            display: block;
+            padding: 0.8rem;
+            background-color: var(--light-color);
+            border-radius: 0.3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-option:checked + .category-label {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.3rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .legal-tips {
+            background-color: rgba(74, 111, 165, 0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 0 0.3rem 0.3rem 0;
+        }
+
+        .legal-tips-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legal-tips-list {
+            padding-left: 1.5rem;
+        }
+
+        .legal-tips-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .category-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-nav {
+                padding: 1rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .question-form {
+                padding: 1.5rem;
+            }
+            .category-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>Legal Lok</span>
+            </div>
+        </div>
+        
+        <div class="top-nav-right">
+            <div class="user-profile">
+                <div class="user-avatar" tabindex="0">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name">John Doe</div>
+                <div class="profile-dropdown">
+                    <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                    <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Side Navigation 
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <i class="fas fa-home"></i>
+                <a href="/dashboard"><span>Dashboard</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-robot"></i>
+                <a href="/chatbot"><span>Legal Chatbot</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-file-alt"></i>
+                <a href="/yourforms"><span>Forms</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <a href="/forum"><span>Community Forum</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-gavel"></i>
+                <a href="/petitions"><span>Petitions</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-bell"></i>
+                <a href="/notifications"><span>Notifications</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-cog"></i>
+                <a href="/settings"><span>Settings</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-newspaper"></i>
+                <a href="/legal-news"><span>Legal News</span></a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-book"></i>
+                <a href="/resources"><span>Resources</span></a>
+            </div>
+        </div>-->
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="ask-question-container">
+                <div class="page-header">
+                    <h1 class="page-title">Ask a Legal Question</h1>
+                    <button class="back-btn" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+                
+                <form class="question-form" id="askQuestionForm">
+                    <div class="form-group">
+                        <label for="questionTitle" class="form-label">Question Title*</label>
+                        <input type="text" id="questionTitle" class="form-input" placeholder="Be specific and concise (e.g., 'How to file for divorce in Maharashtra?')" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionDetails" class="form-label">Detailed Description*</label>
+                        <textarea id="questionDetails" class="form-input form-textarea" placeholder="Include all relevant details:
+- Your specific situation
+- What you've tried so far
+- Any documents you have
+- The outcome you're seeking" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category*</label>
+                        <div class="category-selector">
+                            <input type="radio" id="family-law" name="category" value="family-law" class="category-option" required>
+                            <label for="family-law" class="category-label">Family Law</label>
+                            
+                            <input type="radio" id="business-law" name="category" value="business-law" class="category-option">
+                            <label for="business-law" class="category-label">Business Law</label>
+                            
+                            <input type="radio" id="property-law" name="category" value="property-law" class="category-option">
+                            <label for="property-law" class="category-label">Property Law</label>
+                            
+                            <input type="radio" id="criminal-law" name="category" value="criminal-law" class="category-option">
+                            <label for="criminal-law" class="category-label">Criminal Law</label>
+                            
+                            <input type="radio" id="civil-rights" name="category" value="civil-rights" class="category-option">
+                            <label for="civil-rights" class="category-label">Civil Rights</label>
+                            
+                            <input type="radio" id="tax-law" name="category" value="tax-law" class="category-option">
+                            <label for="tax-law" class="category-label">Tax Law</label>
+                            
+                            <input type="radio" id="employment-law" name="category" value="employment-law" class="category-option">
+                            <label for="employment-law" class="category-label">Employment Law</label>
+                            
+                            <input type="radio" id="other" name="category" value="other" class="category-option">
+                            <label for="other" class="category-label">Other</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="relatedDocuments" class="form-label">Attach Relevant Documents (Optional)</label>
+                        <input type="file" id="relatedDocuments" class="form-input" multiple>
+                        <small style="color: var(--text-light);">You can upload court notices, contracts, or other relevant files (Max 5MB each)</small>
+                    </div>
+                    
+                    <div class="legal-tips">
+                        <div class="legal-tips-title">
+                            <i class="fas fa-lightbulb"></i> Tips for Getting Better Answers
+                        </div>
+                        <ul class="legal-tips-list">
+                            <li>Be specific about your location (state/city) as laws vary</li>
+                            <li>Include relevant dates and timelines</li>
+                            <li>Don't share personally identifiable information</li>
+                            <li>Check if similar questions have been asked before</li>
+                            <li>Be clear about what kind of help you're seeking</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Post Question
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Profile dropdown toggle
+        document.querySelector('.user-avatar')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.user-profile').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelector('.user-profile')?.classList.remove('active');
+        });
+
+        // Form submission
+        document.getElementById('askQuestionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const title = document.getElementById('questionTitle').value;
+            const details = document.getElementById('questionDetails').value;
+            const category = document.querySelector('input[name="category"]:checked').value;
+            
+            // In a real app, you would send this to your backend
+            console.log('Question submitted:', { title, details, category });
+            
+            // Show success message and redirect
+            alert('Your question has been posted successfully!');
+            window.location.href = '/forum';
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if(this.querySelector('a')) {
+                    // Highlight the clicked item
+                    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Logout functionality
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            if(confirm('Are you sure you want to logout?')) {
+                // In a real app, this would redirect to logout endpoint
+                alert('You have been logged out successfully');
+                window.location.href = '/login';
+            }
+        });
+    </script>
+</body>
+</html>

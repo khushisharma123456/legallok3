@@ -1,0 +1,336 @@
+:root {
+    --primary-brown: #5D4037;
+    --dark-brown: #3E2723;
+    --light-brown: #8D6E63;
+    --accent-brown: #A1887F;
+    --background: #EFEBE9;
+    --card-bg: #D7CCC8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--background);
+    color: #333;
+}
+
+.forms-section {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 1200px;
+}
+
+.forms-section h2 {
+    font-size: 28px;
+    color: var(--dark-brown);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--accent-brown);
+    padding-bottom: 10px;
+}
+
+.forms-section h2 i {
+    margin-right: 15px;
+    color: var(--light-brown);
+}
+
+.search-filter-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    border: 2px solid var(--accent-brown);
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: var(--background);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--light-brown);
+}
+.filter-dropdown {
+    min-width: 200px;
+    position: relative;
+}
+
+.filter-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-button:focus {
+    outline: none;
+    border-color: #7e301a;
+}
+
+.filter-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 0;
+    margin-top: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: none;
+}
+
+.filter-options.show {
+    display: block;
+}
+
+.filter-option {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.filter-option:hover {
+    background-color: #f5f5f5;
+}
+
+.filter-option.active {
+    background-color: #e3f2fd;
+    color: #7e3f1a;
+    font-weight: 500;
+}
+
+.filter-dropdown {
+    min-width: 200px;
+}
+
+.filter-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: white;
+    border: 2px solid var(--accent-brown);
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--background);
+}
+
+.category-item {
+    margin-bottom: 25px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.category-header {
+    padding: 18px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-brown);
+    color: white;
+}
+
+.category-header h3 {
+    font-size: 20px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-icon {
+    font-size: 18px;
+    color: var(--card-bg);
+}
+
+.category-forms {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.form-item {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--accent-brown);
+    background-color: white;
+}
+
+.form-item:last-child {
+    border-bottom: none;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.form-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-brown);
+}
+
+.form-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.form-type {
+    background-color: var(--primary-brown);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.form-description {
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.form-details {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--light-brown);
+}
+
+.detail-item i {
+    color: var(--primary-brown);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px dashed var(--accent-brown);
+}
+
+.form-action-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.fill-btn {
+    background-color: var(--primary-brown);
+    color: white;
+}
+
+.fill-btn:hover {
+    background-color: var(--dark-brown);
+}
+
+.preview-btn {
+    background-color: var(--background);
+    color: var(--dark-brown);
+    border: 1px solid var(--light-brown);
+}
+
+.preview-btn:hover {
+    background-color: var(--card-bg);
+}
+
+.download-btn {
+    background-color: var(--light-brown);
+    color: white;
+}
+
+.download-btn:hover {
+    background-color: var(--accent-brown);
+}
+
+.show-more-container {
+    text-align: center;
+    padding: 15px;
+    background-color: var(--card-bg);
+}
+
+.show-more-btn {
+    background-color: var(--dark-brown);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.show-more-btn:hover {
+    background-color: var(--light-brown);
+}
+
+.hidden-form {
+    display: none;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--light-brown);
+    font-size: 16px;
+    background-color: var(--background);
+    border-radius: 8px;
+    margin-top: 20px;
+}

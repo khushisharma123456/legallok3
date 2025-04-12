@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Language Selection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e1d1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Decorative background elements */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(210, 180, 140, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(90, 57, 33, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 60% 20%, rgba(163, 139, 109, 0.1) 0%, transparent 25%);
+            z-index: -1;
+        }
+        
+        /* Subtle pattern overlay */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235a3921' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(139, 69, 19, 0.15);
+            padding: 30px;
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(210, 180, 140, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Container decorative elements */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                rgba(139, 69, 19, 0.05) 0%, 
+                rgba(210, 180, 140, 0.05) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            z-index: -1;
+            border-radius: 20px;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header h1 {
+            color: #8b4513;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .hindi {
+            color: #5a3921;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .language-btn {
+            background-color: rgba(248, 244, 233, 0.8);
+            border: 2px solid rgba(210, 180, 140, 0.5);
+            border-radius: 10px;
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+        }
+        
+        .language-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.2);
+            background-color: rgba(237, 231, 214, 0.9);
+        }
+        
+        .language-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .language-btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .language-btn.active {
+            background-color: #8b4513;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+            border-color: #5a3921;
+        }
+        
+        .language-name {
+            font-size: 22px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .language-btn:hover .language-name {
+            transform: scale(1.05);
+        }
+        
+        .footer {
+            color: #a38b6d;
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        
+        .checkmark {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 16px;
+            color: #4caf50;
+            background-color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .language-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .language-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .hindi {
+                font-size: 20px;
+            }
+            
+            .language-name {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Select Your Language</h1>
+            <h1 class="hindi">अपनी भाषा चुनें</h1>
+        </div>
+        
+        <div class="language-grid">
+            <!-- Row 1 -->
+            <button class="language-btn" onclick="selectLanguage(this, 'hindi')">
+                <span class="language-name">हिन्दी</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'bengali')">
+                <span class="language-name">বাংলা</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'telugu')">
+                <span class="language-name">తెలుగు</span>
+            </button>
+            
+            <!-- Row 2 -->
+            <button class="language-btn" onclick="selectLanguage(this, 'marathi')">
+                <span class="language-name">मराठी</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'tamil')">
+                <span class="language-name">தமிழ்</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'urdu')">
+                <span class="language-name">اردو</span>
+            </button>
+            
+            <!-- Row 3 -->
+            <button class="language-btn" onclick="selectLanguage(this, 'gujarati')">
+                <span class="language-name">ગુજરાતી</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'kannada')">
+                <span class="language-name">ಕನ್ನಡ</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'punjabi')">
+                <span class="language-name">ਪੰਜਾਬੀ</span>
+            </button>
+            
+            <!-- Row 4 -->
+            <button class="language-btn" onclick="selectLanguage(this, 'malayalam')">
+                <span class="language-name">മലയാളം</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'odia')">
+                <span class="language-name">ଓଡ଼ିଆ</span>
+            </button>
+            <button class="language-btn" onclick="selectLanguage(this, 'english')">
+                <span class="language-name">English</span>
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Language Selection</p>
+        </div>
+    </div>
+    
+    <script>
+        function selectLanguage(button, lang) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+                // Remove any existing checkmarks
+                const existingMark = btn.querySelector('.checkmark');
+                if (existingMark) existingMark.remove();
+            });
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Log selection
+            console.log('Selected language:', lang);
+            
+            // Show temporary checkmark
+            const checkmark = document.createElement('span');
+            checkmark.className = 'checkmark';
+            checkmark.textContent = '✓';
+            button.appendChild(checkmark);
+            
+            // Here you would typically redirect or save the language selection
+            // For demo purposes, we'll just show the selection
+            setTimeout(() => {
+                checkmark.remove();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

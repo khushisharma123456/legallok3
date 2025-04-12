@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to file for child custody after divorce? | Legal Lok</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reuse styles from previous pages with additions */
+         /* Base Styles */
+         :root {
+            --primary-color: #7d423b;
+            --secondary-color: #8d5521;
+            --accent-color: #ce7226;
+            --dark-color: #1a2639;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .top-nav-left, .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 0.5rem 0;
+            width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .user-profile.active .profile-dropdown {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-dropdown a, .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-dropdown a:hover, .profile-dropdown button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .logout-btn {
+            color: var(--danger-color);
+        }
+        .back-btn {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background-color: var(--border-color);
+        }
+        /* [Previous CSS for top-nav, sidebar, etc. remains the same] */
+
+        /* Question Detail Specific Styles */
+        .question-container {
+            max-width: 900px;
+            margin: 0 auto;
+            margin-top: 7rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .question-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .question-body {
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: rgba(74, 111, 165, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .vote-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        .vote-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .vote-count {
+            font-weight: bold;
+            margin: 0.3rem 0;
+            font-size: 1.1rem;
+        }
+
+        .upvoted {
+            color: var(--success-color);
+        }
+
+        .downvoted {
+            color: var(--danger-color);
+        }
+
+        .author-card {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: rgba(74, 111, 165, 0.05);
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-badge {
+            display: inline-block;
+            background-color: var(--warning-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+
+        .author-stats {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        /* Answers Section */
+        .answers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .answers-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .sort-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0.3rem;
+        }
+
+        .sort-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .answer {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+        }
+
+        .answer.accepted {
+            border: 2px solid var(--success-color);
+            position: relative;
+        }
+
+        .answer.accepted::before {
+            content: "✓ Accepted Answer";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .answer-body {
+            flex: 1;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        /* Comment Section */
+        .comments {
+            margin-top: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .comment {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-body {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .add-comment {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .comment-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+        }
+
+        /* Answer Form */
+        .answer-form {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .answer-form-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .answer-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        .submit-answer {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-answer:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Related Questions */
+        .related-questions {
+            margin-top: 3rem;
+        }
+
+        .related-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .related-list {
+            list-style: none;
+        }
+
+        .related-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .related-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .related-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .question-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .answer {
+                flex-direction: column;
+            }
+            .vote-container {
+                flex-direction: row;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>Legal Lok</span>
+            </div>
+        </div>
+        
+        <div class="top-nav-right">
+            <div class="user-profile">
+                <div class="user-avatar" tabindex="0">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name">John Doe</div>
+                <div class="profile-dropdown">
+                    <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                    <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Side Navigation (Same as previous pages) -->
+        <div class="sidebar">
+            <!-- ... -->
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            
+            <div class="question-container">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <!-- Question Section -->
+                <div class="question-content">
+                    <div class="question-header">
+                        <div>
+                            <h1 class="question-title">How to file for child custody after divorce?</h1>
+                            <div class="question-meta">
+                                <span>Asked 2 days ago</span>
+                                <span>Modified yesterday</span>
+                                <span>Viewed 65,324 times</span>
+                            </div>
+                        </div>
+                        <button class="action-btn">
+                            <i class="far fa-bookmark"></i> Save
+                        </button>
+                    </div>
+                    
+                    <div class="question-body">
+                        <p>I recently got divorced and need to understand the process for filing for child custody in Maharashtra. My ex-spouse and I have a mutual agreement, but I want to make it legally binding. What documents are required and what should be my first steps?</p>
+                        <p>Additional details:</p>
+                        <ul>
+                            <li>We have one child (age 7)</li>
+                            <li>Currently have an informal shared custody arrangement</li>
+                            <li>Want to formalize primary custody with visitation rights</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="question-tags">
+                        <span class="tag">#child-custody</span>
+                        <span class="tag">#divorce</span>
+                        <span class="tag">#family-law</span>
+                        <span class="tag">#maharashtra</span>
+                    </div>
+                    
+                    <div class="question-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-flag"></i> Report
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    
+                    <div class="author-card">
+                        <div class="author-avatar">AG</div>
+                        <div class="author-info">
+                            <div class="author-name">Aman Gupta <span class="author-badge">Verified User</span></div>
+                            <div class="author-stats">Member since June 2022 • 42 questions • 178 answers</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comments Section -->
+                <div class="comments">
+                    <div class="comment">
+                        <div class="comment-body">
+            Have you already filed for divorce under the Hindu Marriage Act or Special Marriage Act? The process differs slightly.
+                        </div>
+                        <div class="comment-meta">
+                            <span class="comment-author">Riya Sharma</span>
+                            <span>1 day ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="add-comment">
+                        <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                        <button class="comment-submit">Post</button>
+                    </div>
+                </div>
+                
+                <!-- Answers Section -->
+                <div class="answers-header">
+                    <h2 class="answers-title">3 Answers</h2>
+                    <div class="sort-options">
+                        <button class="sort-btn active">Highest Votes</button>
+                        <button class="sort-btn">Most Recent</button>
+                    </div>
+                </div>
+                
+                <!-- Answer 1 (Accepted) -->
+                <div class="answer accepted">
+                    <div class="vote-container">
+                        <button class="vote-btn upvoted"><i class="fas fa-chevron-up"></i></button>
+                        <div class="vote-count">24</div>
+                        <button class="vote-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    
+                    <div class="answer-content">
+                        <div class="answer-body">
+                            <p>As a family lawyer practicing in Mumbai, I can outline the process:</p>
+                            <ol>
+                                <li><strong>File a petition</strong> under Section 26 of the Hindu Marriage Act or Section 38 of the Special Marriage Act</li>
+                                <li><strong>Required documents</strong>:
+                                    <ul>
+                                        <li>Divorce decree copy</li>
+                                        <li>Child's birth certificate</li>
+                                        <li>Your ID and address proof</li>
+                                        <li>Affidavit stating proposed custody arrangement</li>
+                                    </ul>
+                                </li>
+                                <li>The court will consider:
+                                    <ul>
+                                        <li>Child's preference (if age 12+)</li>
+                                        <li>Parent's financial stability</li>
+                                        <li>Existing caregiving arrangement</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <p>Since you have mutual agreement, the process should be straightforward. I recommend:</p>
+                            <ol start="4">
+                                <li>Draft a parenting plan with visitation schedule</li>
+                                <li>File at family court where child resides</li>
+                                <li>Hearing typically takes 3-6 months</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="answer-actions">
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-up"></i> Helpful (42)
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i> Comment
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                        
+                        <div class="author-card">
+                            <div class="author-avatar">PS</div>
+                            <div class="author-info">
+                                <div class="author-name">Priya Singh <span class="author-badge">Verified Lawyer</span></div>
+                                <div class="author-stats">Family Law Specialist • 1,254 answers • 4.9★ rating</div>
+                            </div>
+                        </div>
+                        
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-body">
+                                    Note: If you're filing under the Guardians and Wards Act instead, the process differs slightly - requires separate petition.
+                                </div>
+                                <div class="comment-meta">
+                                    <span class="comment-author">Priya Singh</span>
+                                    <span>1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Answer 2 -->
+                <div class="answer">
+                    <div class="vote-container">
+                        <button class="vote-btn"><i class="fas fa-chevron-up"></i></button>
+                        <div class="vote-count">8</div>
+                        <button class="vote-btn"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    
+                    <div class="answer-content">
+                        <div class="answer-body">
+                            <p>I went through this process last year in Pune. Here's what worked for me:</p>
+                            <p>1. We first registered our mutual consent at the family court (Form 49B)</p>
+                            <p>2. Included custody agreement in the divorce settlement itself</p>
+                            <p>3. Total cost was about ₹15,000 including lawyer fees</p>
+                            <p>The judge asked our child (age 9) simple questions about school and preferences</p>
+                            <p>Whole process took 4 months from filing to final order</p>
+                        </div>
+                        
+                        <div class="answer-actions">
+                            <button class="action-btn">
+                                <i class="far fa-thumbs-up"></i> Helpful (8)
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i> Comment
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                        
+                        <div class="author-card">
+                            <div class="author-avatar">RK</div>
+                            <div class="author-info">
+                                <div class="author-name">Rahul Kapoor</div>
+                                <div class="author-stats">Member since Jan 2021 • 7 answers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Answer Form -->
+                <div class="answer-form">
+                    <h3 class="answer-form-title">Post Your Answer</h3>
+                    <textarea class="answer-textarea" placeholder="Write a detailed answer... (Include references to laws if possible)"></textarea>
+                    <button class="submit-answer">Post Answer</button>
+                </div>
+                
+                <!-- Related Questions -->
+                <div class="related-questions">
+                    <h3 class="related-title">Related Questions</h3>
+                    <ul class="related-list">
+                        <li class="related-item"><a href="#">How to modify existing child custody order?</a></li>
+                        <li class="related-item"><a href="#">What are grandparents' visitation rights in India?</a></li>
+                        <li class="related-item"><a href="#">Child custody laws for interfaith marriages</a></li>
+                        <li class="related-item"><a href="#">How to enforce custody order when ex-spouse refuses?</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Voting functionality
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const container = this.closest('.vote-container');
+                const countEl = container.querySelector('.vote-count');
+                let count = parseInt(countEl.textContent);
+                
+                if (this.classList.contains('upvoted')) {
+                    this.classList.remove('upvoted');
+                    count--;
+                } else if (this.classList.contains('downvoted')) {
+                    this.classList.remove('downvoted');
+                    if (this.classList.contains('fa-chevron-up')) {
+                        this.classList.add('upvoted');
+                        count += 2;
+                    } else {
+                        count++;
+                    }
+                } else {
+                    if (this.classList.contains('fa-chevron-up')) {
+                        this.classList.add('upvoted');
+                        count++;
+                        // Remove downvote if exists
+                        const downBtn = container.querySelector('.fa-chevron-down.downvoted');
+                        if (downBtn) {
+                            downBtn.classList.remove('downvoted');
+                            count++;
+                        }
+                    } else {
+                        this.classList.add('downvoted');
+                        count--;
+                        // Remove upvote if exists
+                        const upBtn = container.querySelector('.fa-chevron-up.upvoted');
+                        if (upBtn) {
+                            upBtn.classList.remove('upvoted');
+                            count--;
+                        }
+                    }
+                }
+                
+                countEl.textContent = count;
+            });
+        });
+
+        // Sort answers
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                // In real app: would reorder answers via AJAX
+            });
+        });
+
+        // Post comment
+        document.querySelectorAll('.comment-submit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input.value.trim()) {
+                    // In real app: would submit via AJAX
+                    console.log('Comment posted:', input.value);
+                    input.value = '';
+                }
+            });
+        });
+
+        // Submit answer
+        document.querySelector('.submit-answer').addEventListener('click', function() {
+            const textarea = document.querySelector('.answer-textarea');
+            if (textarea.value.trim()) {
+                // In real app: would submit via AJAX
+                alert('Your answer has been submitted for moderation');
+                textarea.value = '';
+            }
+        });
+
+        // [Previous JS for mobile menu, sidebar, etc.]
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Profile dropdown toggle
+        document.querySelector('.user-avatar')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.user-profile').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelector('.user-profile')?.classList.remove('active');
+        });
+
+    </script>
+</body>
+</html>

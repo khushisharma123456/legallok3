@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Lok - Community Forum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #7d423b;
+            --secondary-color: #8d5521;
+            --accent-color: #ce7226;
+            --dark-color: #1a2639;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .top-nav-left, .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 0.5rem 0;
+            width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .user-profile.active .profile-dropdown {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-dropdown a, .profile-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.7rem 1rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-dropdown a:hover, .profile-dropdown button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .logout-btn {
+            color: var(--danger-color);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 1.5rem 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            left: 0;
+            transition: var(--transition);
+            z-index: 900;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            margin: 0.2rem 0;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-light);
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+            color: var(--primary-color);
+        }
+
+        .sidebar-item.active {
+            background-color: rgba(74, 111, 165, 0.2);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar-item i {
+            margin-right: 1rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-item .badge {
+            margin-left: auto;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content */
+        .content-area {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        /* Forum Header */
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .forum-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+        }
+
+        .ask-question-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .ask-question-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Forum Content */
+        .forum-content {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .forum-main {
+            flex: 2;
+        }
+
+        .forum-sidebar {
+            flex: 1;
+        }
+
+        /* Forum Post */
+        .forum-post {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .forum-post:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .post-action:hover {
+            color: var(--primary-color);
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .author-name {
+            font-weight: 600;
+        }
+
+        /* Sidebar Widgets */
+        .forum-widget {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .widget-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .widget-title i {
+            color: var(--primary-color);
+        }
+
+        .category-list, .resource-list {
+            list-style: none;
+        }
+
+        .category-item, .resource-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-item:last-child, .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .category-link, .resource-link {
+            color: var(--text-color);
+            transition: var(--transition);
+            flex: 1;
+        }
+
+        .category-link:hover, .resource-link:hover {
+            color: var(--primary-color);
+        }
+
+        .category-count {
+            background-color: var(--light-color);
+            color: var(--text-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Popular Tags */
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .tag:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Search Widget */
+        .search-form {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.3rem 0 0 0.3rem;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 0 0.3rem 0.3rem 0;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .forum-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .post-meta {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .post-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .post-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-nav {
+                padding: 1rem;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .forum-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>Legal Lok</span>
+            </div>
+        </div>
+        
+        <div class="top-nav-right">
+            <div class="user-profile">
+                <div class="user-avatar" tabindex="0">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name">John Doe</div>
+                <div class="profile-dropdown">
+                    <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+                    <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                    <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Side Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-robot"></i>
+                <span>Legal Chatbot</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-file-alt"></i>
+                <a href="/yourforms">
+                <span>Forms</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-item active">
+                <i class="fas fa-users"></i>
+                <span>Community Forum</span>
+                <span class="badge">3</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-gavel"></i>
+                <span>Petitions</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <span class="badge">5</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+            
+            <!-- Additional Options from Previous Pages -->
+            <div class="sidebar-item">
+                <i class="fas fa-newspaper"></i>
+                <span>Legal News</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-book"></i>
+                <span>Resources</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-user-tie"></i>
+                <span>Find a Lawyer</span>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Forum Header -->
+            <div class="forum-header">
+                <h1 class="forum-title">Community Forum</h1>
+                <button class="ask-question-btn">
+                    <a href = "/askquestion"><i class="fas fa-plus"></i> Ask a Question</a>
+                </button>
+            </div>
+            
+            <div class="forum-content">
+                <!-- Main Forum Area -->
+                <div class="forum-main">
+                    <!-- Popular Discussions -->
+                    <h2 style="margin-bottom: 1rem;">Popular Discussions</h2>
+                    
+                    <!-- Question 1 -->
+                    <div class="forum-post">
+                        <div class="post-header">
+                            <h3 class="post-title">How can I file for child custody after a divorce?</h3>
+                            <div class="post-meta">
+                                <span><i class="far fa-eye"></i> 65,324</span>
+                                <span><i class="far fa-thumbs-up"></i> 36,654</span>
+                                <span><i class="far fa-comment"></i> 56</span>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>I recently got divorced and need to understand the process for filing for child custody. What documents are required and what should be my first steps? I'm particularly concerned about how to demonstrate that I can provide a stable environment for my child.</p>
+                        </div>
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <div class="post-action">
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>Like</span>
+                                </div>
+                                <div class="post-action">
+                                    <a href="/answerquestion">
+                                    <i class="far fa-comment"></i>
+                                    <span>Comment</span>
+                                    </a>
+                                </div>
+                                <div class="post-action">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="far fa-bookmark"></i>
+                                    <span>Save</span>
+                                </div>
+                            </div>
+                            <div class="post-author">
+                                <div class="author-avatar">AG</div>
+                                <span class="author-name">Aman Gupta</span>
+                                <span class="post-time">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="forum-post">
+                        <div class="post-header">
+                            <h3 class="post-title">What are the key differences between a sole proprietorship and a corporation?</h3>
+                            <div class="post-meta">
+                                <span><i class="far fa-eye"></i> 601,066</span>
+                                <span><i class="far fa-thumbs-up"></i> 24,753</span>
+                                <span><i class="far fa-comment"></i> 209</span>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>I'm starting a new business and trying to decide between a sole proprietorship and corporation. What are the main differences in terms of legal liability and taxation? Also, how difficult is it to convert from one to another later if needed?</p>
+                        </div>
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <div class="post-action">
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>Like</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="far fa-comment"></i>
+                                    <span>Comment</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="far fa-bookmark"></i>
+                                    <span>Save</span>
+                                </div>
+                            </div>
+                            <div class="post-author">
+                                <div class="author-avatar">RC</div>
+                                <span class="author-name">Rivers Chaudhury</span>
+                                <span class="post-time">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="forum-post">
+                        <div class="post-header">
+                            <h3 class="post-title">What legal steps are needed to register a new business?</h3>
+                            <div class="post-meta">
+                                <span><i class="far fa-eye"></i> 244,564</span>
+                                <span><i class="far fa-thumbs-up"></i> 10,920</span>
+                                <span><i class="far fa-comment"></i> 184</span>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>I'm planning to start a small retail business in Mumbai. Can someone outline the complete legal registration process including any licenses I might need? I'm particularly confused about GST registration and shop establishment license requirements.</p>
+                        </div>
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <div class="post-action">
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>Like</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="far fa-comment"></i>
+                                    <span>Comment</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </div>
+                                <div class="post-action">
+                                    <i class="far fa-bookmark"></i>
+                                    <span>Save</span>
+                                </div>
+                            </div>
+                            <div class="post-author">
+                                <div class="author-avatar">AJ</div>
+                                <span class="author-name">AR Jabir</span>
+                                <span class="post-time">3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Load More Button -->
+                    <button class="ask-question-btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                        <i class="fas fa-arrow-down"></i> Load More Discussions
+                    </button>
+                </div>
+                
+                <!-- Forum Sidebar -->
+                <div class="forum-sidebar">
+                    <!-- Search Widget -->
+                    <div class="forum-widget">
+                        <div class="search-form">
+                            <input type="text" class="search-input" placeholder="Search the forum...">
+                            <button class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Categories Widget -->
+                    <div class="forum-widget">
+                        <h3 class="widget-title">
+                            <i class="fas fa-folder-open"></i> Categories
+                        </h3>
+                        <ul class="category-list">
+                            <li class="category-item">
+                                <a href="#" class="category-link">Family Law</a>
+                                <span class="category-count">1,245</span>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" class="category-link">Business Law</a>
+                                <span class="category-count">892</span>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" class="category-link">Property Law</a>
+                                <span class="category-count">756</span>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" class="category-link">Criminal Law</a>
+                                <span class="category-count">1,032</span>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" class="category-link">Tax Law</a>
+                                <span class="category-count">587</span>
+                            </li>
+                            <li class="category-item">
+                                <a href="#" class="category-link">Civil Rights</a>
+                                <span class="category-count">421</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Popular Tags Widget -->
+                    <div class="forum-widget">
+                        <h3 class="widget-title">
+                            <i class="fas fa-tags"></i> Popular Tags
+                        </h3>
+                        <div class="tag-cloud">
+                            <a href="#" class="tag">#divorce</a>
+                            <a href="#" class="tag">#custody</a>
+                            <a href="#" class="tag">#business</a>
+                            <a href="#" class="tag">#taxation</a>
+                            <a href="#" class="tag">#property</a>
+                            <a href="#" class="tag">#contract</a>
+                            <a href="#" class="tag">#employment</a>
+                            <a href="#" class="tag">#rights</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Resources Widget -->
+                    <div class="forum-widget">
+                        <h3 class="widget-title">
+                            <i class="fas fa-book"></i> Legal Resources
+                        </h3>
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    <i class="fas fa-file-pdf"></i> Family Law Handbook
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    <i class="fas fa-file-pdf"></i> Business Registration Guide
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    <i class="fas fa-file-pdf"></i> Tenant Rights in India
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    <i class="fas fa-file-pdf"></i> Consumer Protection Laws
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Upcoming Events Widget -->
+                    <div class="forum-widget">
+                        <h3 class="widget-title">
+                            <i class="fas fa-calendar-alt"></i> Upcoming Events
+                        </h3>
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    7th National Moot Court Competition (April 11-15)
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    Maharashtra Legal Rights Consortium (Feb 25)
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="#" class="resource-link">
+                                    Contract Drafting Competition (Feb 24)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Profile dropdown toggle
+        document.querySelector('.user-avatar')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.user-profile').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelector('.user-profile')?.classList.remove('active');
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if(this.querySelector('a')) return; // Skip if it's a link
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Logout functionality
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            if(confirm('Are you sure you want to logout?')) {
+                // In a real app, this would redirect to logout endpoint
+                alert('You have been logged out successfully');
+                // window.location.href = '/logout';
+            }
+        });
+        
+        // Ask question button
+        document.querySelector('.ask-question-btn').addEventListener('click', function() {
+            // In a real app, this would open a question form
+            window.location.href = '/forum/ask';
+        });
+        
+        // Like/comment/share actions
+        document.querySelectorAll('.post-action').forEach(action => {
+            action.addEventListener('click', function() {
+                // In a real app, this would trigger the appropriate action
+                const actionType = this.querySelector('span').textContent;
+                console.log(`${actionType} action triggered`);
+            });
+        });
+        
+        // Search functionality
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const query = document.querySelector('.search-input').value;
+            if(query.trim()) {
+                console.log(`Searching for: ${query}`);
+                // In a real app, this would trigger a search
+            }
+        });
+        
+        // Allow search on Enter key
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                document.querySelector('.search-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>

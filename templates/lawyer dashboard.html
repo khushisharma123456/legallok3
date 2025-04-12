@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lawyer Dashboard | Legal Lok</title>
+    <link rel="stylesheet" href="static/lawyerdasboad.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">LL</div>
+            <span class="brand-name">Legal Lok</span>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-profile">
+                <div class="profile-pic">
+                    {{ lawyer.first_name[0] }}{{ lawyer.last_name[0] }}
+                </div>
+                <span class="profile-name">Adv. {{ lawyer.first_name }} {{ lawyer.last_name }}</span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-briefcase"></i>
+                My Cases
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                Clients
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                Calendar
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-file-contract"></i>
+                Documents
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-rupee-sign"></i>
+                Billing
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                Analytics
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="welcome-header">
+                <h2>Welcome, <span>Adv. {{ lawyer.first_name }} {{ lawyer.last_name }}</span></h2>
+                <p>Here's what's happening with your practice today</p>
+            </div>
+
+            <div class="lawyer-info-card">
+                <h3>Your Details</h3>
+                <ul>
+                    <li><strong>Email:</strong> {{ lawyer.email }}</li>
+                    <li><strong>Phone:</strong> {{ lawyer.phone }}</li>
+                    <li><strong>Bar Number:</strong> {{ lawyer.bar_number }}</li>
+                    <li><strong>Years of Practice:</strong> {{ lawyer.practice_years }}</li>
+                    <li><strong>Specialization:</strong> {{ lawyer.specialization }}</li>
+                    <li><strong>Address:</strong> {{ lawyer.address }}, {{ lawyer.city }}, {{ lawyer.state }} - {{ lawyer.pincode }}</li>
+                </ul>
+            </div>
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Active Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value"><i class="fas fa-arrow-up upvote-arrow"></i> 142</div>
+                    <span class="upvote-change">+12 this month</span>
+                    <div class="stat-label">Legal Upvotes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">New Consultations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="primary-btn">
+                    <i class="fas fa-plus"></i> Add New Case
+                </button>
+                <button class="primary-btn">
+                    <i class="fas fa-calendar-plus"></i> Schedule Hearing
+                </button>
+                <button class="primary-btn">
+                    <i class="fas fa-file-invoice"></i> Generate Invoice
+                </button>
+                <button class="primary-btn">
+                    <i class="fas fa-file-contract"></i> Draft Document
+                </button>
+            </div>
+            
+            <!-- Recent Cases -->
+            <h3 class="section-title">Recent Cases</h3>
+            <table class="case-table">
+                <thead>
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Client Name</th>
+                        <th>Type</th>
+                        <th>Court</th>
+                        <th>Next Hearing</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CL-2023-0456</td>
+                        <td>Priya Patel</td>
+                        <td>Divorce</td>
+                        <td>Family Court #12</td>
+                        <td>15 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td><button class="action-btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>CL-2023-0389</td>
+                        <td>Rohan Desai</td>
+                        <td>Property Dispute</td>
+                        <td>District Court</td>
+                        <td>18 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td><button class="action-btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>CL-2023-0123</td>
+                        <td>Meera Iyer</td>
+                        <td>Will Probate</td>
+                        <td>High Court</td>
+                        <td>20 Nov 2023</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><button class="action-btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td>CL-2023-0056</td>
+                        <td>Sanjay Gupta</td>
+                        <td>Consumer Complaint</td>
+                        <td>Consumer Forum</td>
+                        <td>22 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td><button class="action-btn">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Upcoming Hearings -->
+            <h3 class="section-title">Upcoming Hearings</h3>
+            <div class="hearing-item">
+                <div class="hearing-date">15 Nov • 10:30 AM</div>
+                <div class="hearing-details">
+                    <strong>Priya Patel vs. Raj Patel</strong>
+                    <span>Family Court #12 • Case No. FC-4567/2023</span>
+                </div>
+            </div>
+            <div class="hearing-item">
+                <div class="hearing-date">18 Nov • 02:15 PM</div>
+                <div class="hearing-details">
+                    <strong>Rohan Desai vs. Municipal Corp.</strong>
+                    <span>District Court • Case No. DC-8912/2023</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // This would include functionality for:
+        // - Loading case data dynamically
+        // - Handling quick actions
+        // - Calendar integration
+        // - Real-time updates
+        
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // In real implementation, would open case details
+                alert('Opening case details view');
+            });
+        });
+        
+        document.querySelectorAll('.primary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                alert(`Initiating: ${action}`);
+            });
+        });
+    </script>
+</body>
+</html>

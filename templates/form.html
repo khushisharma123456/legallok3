@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Lok - Forms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/dashboard.css">
+    <link rel="stylesheet" href="static/form.css">
+    <style>
+        /* Additional styles for form selection */
+        .form-selection-container {
+            padding: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .form-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: white;
+        }
+        
+        .form-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            border-color: #5D4037;
+        }
+        
+        .form-card h3 {
+            color: #5D4037;
+            margin-bottom: 10px;
+        }
+        
+        .form-card p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .back-button {
+            background-color: #5D4037;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                <span>Legal Lok</span>
+            </div>
+        </div>
+        
+        <div class="top-nav-right">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name">John Doe</div>
+            </div>
+            <button class="logout-btn">Logout</button>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Side Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-robot"></i>
+                <span>Legal Chatbot</span>
+            </div>
+            
+            <div class="sidebar-item active">
+                <i class="fas fa-file-alt"></i>
+                <span>Forms</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <span>Community Forum</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-gavel"></i>
+                <span>Petitions</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+        
+        <!-- Form Selection or Form Filler Container -->
+        <div class="main-content" id="main-content">
+            <!-- Initial content will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Templates -->
+    <template id="form-selection-template">
+        <div class="form-selection-container">
+            <h1><i class="fas fa-file-alt"></i> Select a Form</h1>
+            
+            <div class="search-filter-bar">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Search forms..." id="form-search">
+                </div>
+                <div class="filter-dropdown">
+                    <button class="filter-button" id="filter-button">
+                        <span>All Categories</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="filter-options" id="filter-options">
+                        <div class="filter-option active" data-category="all">All Categories</div>
+                        <div class="filter-option" data-category="property">Property</div>
+                        <div class="filter-option" data-category="family">Family</div>
+                        <div class="filter-option" data-category="business">Business</div>
+                        <div class="filter-option" data-category="employment">Employment</div>
+                        <div class="filter-option" data-category="criminal">Criminal</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-grid" id="form-grid">
+                <!-- Forms will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </template>
+
+    <template id="form-filler-template">
+        <div class="forms-section">
+            <button class="back-button" id="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Forms
+            </button>
+            <h2 id="form-title"><i class="fas fa-file-alt"></i> Loading Form...</h2>
+            <div id="form-description"></div>
+            
+            <form id="dynamic-form">
+                <!-- Form fields will be loaded here by JavaScript -->
+            </form>
+            
+            <div class="form-actions">
+                <button type="button" class="form-action-btn fill-btn" id="save-draft-btn">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button type="button" class="form-action-btn preview-btn" id="preview-btn">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button type="submit" class="form-action-btn download-btn" id="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit
+                </button>
+            </div>
+        </div>
+    </template>
+    
+
+    <script>
+        // Main Application Script
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContent = document.getElementById('main-content');
+            
+            // Load form selection page by default
+            loadFormSelection();
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.querySelector('span').textContent === 'Forms') {
+                        loadFormSelection();
+                    }
+                });
+            });
+            
+            // Logout functionality
+            document.querySelector('.logout-btn').addEventListener('click', function() {
+                if(confirm('Are you sure you want to logout?')) {
+                    alert('You have been logged out successfully');
+                    // window.location.href = '/logout';
+                }
+            });
+            
+            // Back button event delegation
+            document.body.addEventListener('click', function(e) {
+                if (e.target.closest('#back-button')) {
+                    loadFormSelection();
+                }
+            });
+        });
+        
+        // Load form selection page
+        async function loadFormSelection() {
+            const template = document.getElementById('form-selection-template');
+            const clone = template.content.cloneNode(true);
+            document.getElementById('main-content').innerHTML = '';
+            document.getElementById('main-content').appendChild(clone);
+            
+            // Load forms from JSON
+            try {
+                const response = await fetch('/api/forms');
+                const forms = await response.json();
+                renderFormCards(forms);
+                
+                // Setup filter functionality
+                setupFilters();
+            } catch (error) {
+                console.error('Error loading forms:', error);
+                document.getElementById('form-grid').innerHTML = 
+                    '<p>Error loading forms. Please try again later.</p>';
+            }
+        }
+        
+        // Render form cards in selection view
+        function renderFormCards(forms) {
+            const formGrid = document.getElementById('form-grid');
+            formGrid.innerHTML = '';
+            
+            forms.forEach(form => {
+                const formCard = document.createElement('div');
+                formCard.className = 'form-card';
+                formCard.dataset.formId = form.id;
+                formCard.dataset.category = form.category || 'general';
+                formCard.innerHTML = `
+                    <h3>${form.title}</h3>
+                    <p>${form.description}</p>
+                    <div class="form-meta" style="margin-top: 10px;">
+                        <span style="font-size: 12px; color: #5D4037;">
+                            <i class="fas fa-download"></i> ${form.downloads || 0} downloads
+                        </span>
+                    </div>
+                `;
+                
+                formCard.addEventListener('click', () => loadFormFiller(form.id));
+                formGrid.appendChild(formCard);
+            });
+        }
+        
+        // Setup filter functionality
+        function setupFilters() {
+            const filterButton = document.getElementById('filter-button');
+            const filterOptions = document.getElementById('filter-options');
+            const searchInput = document.getElementById('form-search');
+            
+            // Toggle filter dropdown
+            filterButton.addEventListener('click', () => {
+                filterOptions.classList.toggle('show');
+            });
+            
+            // Filter option selection
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-option').forEach(opt => 
+                        opt.classList.remove('active'));
+                    this.classList.add('active');
+                    filterButton.querySelector('span').textContent = this.textContent;
+                    filterOptions.classList.remove('show');
+                    
+                    const category = this.dataset.category;
+                    filterForms(category);
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const activeCategory = document.querySelector('.filter-option.active').dataset.category;
+                filterForms(activeCategory, searchTerm);
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!filterButton.contains(e.target) && !filterOptions.contains(e.target)) {
+                    filterOptions.classList.remove('show');
+                }
+            });
+        }
+        
+        // Filter forms by category and search term
+        function filterForms(category, searchTerm = '') {
+            const formCards = document.querySelectorAll('.form-card');
+            
+            formCards.forEach(card => {
+                const matchesCategory = category === 'all' || card.dataset.category === category;
+                const matchesSearch = card.textContent.toLowerCase().includes(searchTerm);
+                
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Load form filler for a specific form
+        async function loadFormFiller(formId) {
+            try {
+                const response = await fetch(`/api/forms/${formId}`);
+                const formTemplate = await response.json();
+                renderFormFiller(formTemplate);
+            } catch (error) {
+                console.error('Error loading form:', error);
+                alert('Error loading form. Please try again later.');
+            }
+        }
+        
+        // Render the form filler
+        function renderFormFiller(formTemplate) {
+            const template = document.getElementById('form-filler-template');
+            const clone = template.content.cloneNode(true);
+            document.getElementById('main-content').innerHTML = '';
+            document.getElementById('main-content').appendChild(clone);
+            
+            // Set form title and description
+            document.getElementById('form-title').innerHTML = 
+                `<i class="fas fa-file-alt"></i> ${formTemplate.title}`;
+            document.getElementById('form-description').textContent = formTemplate.description;
+            
+            // Render form fields
+            const formElement = document.getElementById('dynamic-form');
+            formTemplate.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'form-section';
+                sectionDiv.innerHTML = `<h3>${section.title}</h3>`;
+                
+                section.fields.forEach(field => {
+                    const fieldGroup = document.createElement('div');
+                    fieldGroup.className = 'form-group';
+                    
+                    const label = document.createElement('label');
+                    label.textContent = field.label;
+                    if (field.required) label.innerHTML += ' <span style="color:red">*</span>';
+                    
+                    let inputElement;
+                    switch(field.type) {
+                        case 'text':
+                        case 'number':
+                        case 'date':
+                            inputElement = document.createElement('input');
+                            inputElement.type = field.type;
+                            inputElement.id = field.field_id;
+                            inputElement.name = field.field_id;
+                            if (field.placeholder) inputElement.placeholder = field.placeholder;
+                            break;
+                        case 'textarea':
+                            inputElement = document.createElement('textarea');
+                            inputElement.id = field.field_id;
+                            inputElement.name = field.field_id;
+                            if (field.rows) inputElement.rows = field.rows;
+                            break;
+                        case 'select':
+                            inputElement = document.createElement('select');
+                            inputElement.id = field.field_id;
+                            inputElement.name = field.field_id;
+                            field.options.forEach(option => {
+                                const optionElement = document.createElement('option');
+                                optionElement.value = option.value;
+                                optionElement.textContent = option.label;
+                                inputElement.appendChild(optionElement);
+                            });
+                            break;
+                        case 'radio':
+                        case 'checkbox':
+                            // Implement radio/checkbox groups as needed
+                            break;
+                        default:
+                            inputElement = document.createElement('input');
+                            inputElement.type = 'text';
+                    }
+                    
+                    if (field.required) inputElement.required = true;
+                    
+                    fieldGroup.appendChild(label);
+                    fieldGroup.appendChild(inputElement);
+                    sectionDiv.appendChild(fieldGroup);
+                });
+                
+                formElement.insertBefore(sectionDiv, formElement.querySelector('.form-actions'));
+            });
+            
+            // Form submission
+            document.getElementById('dynamic-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Submit to server
+                fetch('/api/save-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        form_id: formTemplate.id,
+                        data: data
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Form submitted successfully!');
+                })
+                .catch(error => {
+                    console.error('Error submitting form:', error);
+                    alert('Error submitting form. Please try again.');
+                });
+            });
+            
+            // Save draft functionality
+            document.getElementById('save-draft-btn').addEventListener('click', function() {
+                const formData = new FormData(document.getElementById('dynamic-form'));
+                const data = Object.fromEntries(formData.entries());
+                
+                localStorage.setItem(`draft_${formTemplate.id}`, JSON.stringify(data));
+                alert('Draft saved successfully!');
+            });
+            
+            // Load draft if exists
+            const draft = localStorage.getItem(`draft_${formTemplate.id}`);
+            if (draft) {
+                const data = JSON.parse(draft);
+                Object.entries(data).forEach(([key, value]) => {
+                    const input = document.getElementById(key);
+                    if (input) input.value = value;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
