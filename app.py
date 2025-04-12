@@ -152,12 +152,12 @@ def logout():
 
 @app.route('/form')
 def form():
-    user = get_current_user()  # or however you're fetching the current user
+    user = User.query.get(session['user_id'])  # or however you're fetching the current user
     return render_template('form2.html', user=user)
 
 @app.route('/community')
 def community():
-    user = get_current_user()  # or however you're fetching the current user
+    user = User.query.get(session['user_id'])  # or however you're fetching the current user
     return render_template('communityforum.html', user=user)
 
 @app.route('/chatbot')
