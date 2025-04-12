@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cases | Legal Lok</title>
+    <link rel="stylesheet" href="/Users/suchikamishra/Desktop/Projects/Devcation 25/static/lawyer cases.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">LL</div>
+            <span class="brand-name">Legal Lok</span>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <a href="lawyer dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="lawyer cases.html" class="nav-item active">
+                <i class="fas fa-briefcase"></i>
+                My Cases
+            </a>
+            <a href="clients.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                Legal Chatbot
+            </a>
+            <a href="calendar.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                Community Forum
+            </a>
+            <a href="lawyer settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+        </div>
+        
+        <div class="main-content">
+            <div class="welcome-header">
+                <h2>My Cases</h2>
+                <p>Manage all your ongoing legal matters</p>
+            </div>
+            
+            <div class="case-filters">
+                <select class="filter-select">
+                    <option>All Cases</option>
+                    <option>Active</option>
+                    <option>Closed</option>
+                    <option>Upcoming Hearings</option>
+                </select>
+                <input type="text" placeholder="Search cases..." class="search-input">
+                <button class="primary-btn"><i class="fas fa-plus"></i> Add Case</button>
+            </div>
+            
+            <table class="case-table">
+                <thead>
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Title</th>
+                        <th>Client</th>
+                        <th>Court</th>
+                        <th>Filing Date</th>
+                        <th>Next Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CL-2023-0456</td>
+                        <td>Patel vs. Patel</td>
+                        <td>Priya Patel</td>
+                        <td>Family Court #12</td>
+                        <td>15 Jan 2023</td>
+                        <td>15 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Documents"><i class="fas fa-file-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CL-2023-0389</td>
+                        <td>Desai Property Dispute</td>
+                        <td>Rohan Desai</td>
+                        <td>District Court</td>
+                        <td>10 Mar 2023</td>
+                        <td>18 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Documents"><i class="fas fa-file-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CL-2023-0123</td>
+                        <td>Iyer Will Probate</td>
+                        <td>Meera Iyer</td>
+                        <td>High Court</td>
+                        <td>05 May 2023</td>
+                        <td>20 Nov 2023</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Documents"><i class="fas fa-file-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CL-2022-1056</td>
+                        <td>Gupta Consumer Case</td>
+                        <td>Sanjay Gupta</td>
+                        <td>Consumer Forum</td>
+                        <td>15 Oct 2022</td>
+                        <td>22 Nov 2023</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn" title="Documents"><i class="fas fa-file-alt"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <button class="page-btn">Previous</button>
+                <span class="page-number">1 of 3</span>
+                <button class="page-btn">Next</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Case filter functionality
+        document.querySelector('.filter-select').addEventListener('change', function() {
+            const status = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.case-table tbody tr');
+            
+            rows.forEach(row => {
+                if (status === 'all cases') {
+                    row.style.display = '';
+                } else {
+                    const rowStatus = row.querySelector('.status-badge').textContent.toLowerCase();
+                    if (rowStatus.includes(status)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.case-table tbody tr');
+            
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.title;
+                const caseId = this.closest('tr').querySelector('td:first-child').textContent;
+                alert(`${action} case ${caseId}`);
+            });
+        });
+    </script>
+</body>
+</html>

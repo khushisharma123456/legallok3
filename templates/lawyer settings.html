@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Legal Lok</title>
+    <link rel="stylesheet", href="/Users/suchikamishra/Desktop/Projects/Devcation 25/static/lawyer settings.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo">LL</div>
+            <span class="brand-name">Legal Lok</span>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <a href="lawyer dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="lawyer cases.html" class="nav-item active">
+                <i class="fas fa-briefcase"></i>
+                My Cases
+            </a>
+            <a href="clients.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                Legal Chatbot
+            </a>
+            <a href="calendar.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                Community Forum
+            </a>
+            <a href="lawyer settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                Settings
+            </a>
+        </div>
+        
+        <div class="main-content">
+            <div class="welcome-header">
+                <h2>Account Settings</h2>
+                <p>Manage your profile and preferences</p>
+            </div>
+            
+            <div class="settings-tabs">
+                <button class="tab-btn active">Profile</button>
+                <button class="tab-btn">Security</button>
+                <button class="tab-btn">Notifications</button>
+                <button class="tab-btn">Preferences</button>
+            </div>
+            
+            <!-- Profile Section -->
+            <div class="settings-section">
+                <h3><i class="fas fa-user"></i> Personal Information</h3>
+                
+                <div class="profile-picture">
+                    <div class="profile-img">RS</div>
+                    <button class="upload-btn">Change Photo</button>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="Adv. Rahul Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="rahul.sharma@legallok.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" value="+91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" value="24, Legal Chambers, Mumbai">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="secondary-btn">Cancel</button>
+                    <button class="primary-btn">Save Changes</button>
+                </div>
+            </div>
+            
+            <!-- Professional Information Section -->
+            <div class="settings-section">
+                <h3><i class="fas fa-gavel"></i> Professional Information</h3>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Bar Council Number</label>
+                        <input type="text" value="MH/2546/2010">
+                    </div>
+                    <div class="form-group">
+                        <label>Specialization</label>
+                        <select>
+                            <option>Family Law</option>
+                            <option selected>Property Law</option>
+                            <option>Criminal Law</option>
+                            <option>Corporate Law</option>
+                            <option>Intellectual Property</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Years of Practice</label>
+                        <input type="number" value="13">
+                    </div>
+                    <div class="form-group">
+                        <label>Consultation Fee (₹)</label>
+                        <input type="number" value="2500">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Professional Bio</label>
+                    <textarea>Senior advocate specializing in property disputes with 13 years of experience. Practicing in Mumbai High Court and District Courts.</textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="secondary-btn">Cancel</button>
+                    <button class="primary-btn">Save Changes</button>
+                </div>
+            </div>
+            
+            <!-- Security Section (Hidden by default) -->
+            <div class="settings-section" style="display: none;">
+                <h3><i class="fas fa-shield-alt"></i> Security</h3>
+                
+                <div class="security-item">
+                    <div class="security-info">
+                        <h4>Password</h4>
+                        <p>Last changed 3 months ago</p>
+                    </div>
+                    <div class="security-status">Active</div>
+                    <div class="security-actions">
+                        <button>Change</button>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-info">
+                        <h4>Two-Factor Authentication</h4>
+                        <p>Add an extra layer of security to your account</p>
+                    </div>
+                    <div class="security-status">Inactive</div>
+                    <div class="security-actions">
+                        <button>Enable</button>
+                    </div>
+                </div>
+                
+                <div class="security-item">
+                    <div class="security-info">
+                        <h4>Active Sessions</h4>
+                        <p>View and manage your logged-in devices</p>
+                    </div>
+                    <div class="security-actions">
+                        <button>Manage</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification Section (Hidden by default) -->
+            <div class="settings-section" style="display: none;">
+                <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+                
+                <div class="notification-item">
+                    <div class="notification-info">
+                        <h4>Case Updates</h4>
+                        <p>Get notified about case status changes</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-info">
+                        <h4>Hearing Reminders</h4>
+                        <p>Receive reminders for upcoming hearings</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-info">
+                        <h4>New Messages</h4>
+                        <p>Alert when you receive new messages from clients</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-info">
+                        <h4>Payment Notifications</h4>
+                        <p>Get notified about invoice payments</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-info">
+                        <h4>Newsletter</h4>
+                        <p>Receive Legal Lok updates and legal news</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Preferences Section (Hidden by default) -->
+            <div class="settings-section" style="display: none;">
+                <h3><i class="fas fa-sliders-h"></i> Application Preferences</h3>
+                
+                <div class="form-group">
+                    <label>Theme</label>
+                    <select>
+                        <option selected>Light</option>
+                        <option>Dark</option>
+                        <option>System Default</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Default View</label>
+                    <select>
+                        <option selected>Dashboard</option>
+                        <option>Cases</option>
+                        <option>Calendar</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Time Zone</label>
+                    <select>
+                        <option selected>(GMT+5:30) India Standard Time</option>
+                        <option>(GMT+8:00) Singapore Standard Time</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date Format</label>
+                    <select>
+                        <option selected>DD/MM/YYYY</option>
+                        <option>MM/DD/YYYY</option>
+                        <option>YYYY-MM-DD</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="secondary-btn">Reset Defaults</button>
+                    <button class="primary-btn">Save Preferences</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                //Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all sections
+                document.querySelectorAll('.settings-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the corresponding section
+                const tabText = this.textContent.trim();
+                if (tabText === 'Profile') {
+                    document.querySelectorAll('.settings-section')[0].style.display = 'block';
+                    document.querySelectorAll('.settings-section')[1].style.display = 'block';
+                } else if (tabText === 'Security') {
+                    document.querySelectorAll('.settings-section')[2].style.display = 'block';
+                } else if (tabText === 'Notifications') {
+                    document.querySelectorAll('.settings-section')[3].style.display = 'block';
+                } else if (tabText === 'Preferences') {
+                    document.querySelectorAll('.settings-section')[4].style.display = 'block';
+                }
+            });
+        });
+        
+        // Initialize with Profile tab active
+        document.querySelectorAll('.settings-section')[0].style.display = 'block';
+        document.querySelectorAll('.settings-section')[1].style.display = 'block';
+    </script>
+</body>
+</html>
