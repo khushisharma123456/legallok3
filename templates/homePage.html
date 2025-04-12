@@ -98,7 +98,6 @@
             color: white;
             min-height: 70vh;
         }
-        
         .hero::before {
             content: "";
             position: absolute;
@@ -106,10 +105,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(145, 101, 83, 0.4) 0%, rgba(112, 49, 12, 0.4) 100%),
-                        url('Untitled design.gif') center/cover;
+            background: 
+                linear-gradient(135deg, rgba(145, 101, 83, 0.4) 0%, rgba(112, 49, 12, 0.4) 100%),
+                url('static/front.png') center/cover no-repeat;
             z-index: -1;
         }
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background: 
+                linear-gradient(135deg, rgba(145, 101, 83, 0.4) 0%, rgba(112, 49, 12, 0.4) 100%),
+                url('static/front page.png') center center / cover no-repeat;
+            z-index: -1;
+        }
+
         
         .hero-content {
             max-width: 600px;
