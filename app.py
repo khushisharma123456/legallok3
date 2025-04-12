@@ -166,7 +166,8 @@ def chatbot():
 
 @app.route('/askquestion')
 def askquestion():
-    return render_template('askquestion.html')
+    user = User.query.get(session['user_id'])
+    return render_template('askquestion.html', user=user)
 
 @app.route('/answerquestion')
 def answerquestion():
