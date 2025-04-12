@@ -152,11 +152,13 @@ def logout():
 
 @app.route('/form')
 def form():
-    return render_template('form2.html')
+    user = get_current_user()  # or however you're fetching the current user
+    return render_template('form2.html', user=user)
 
 @app.route('/community')
 def community():
-    return render_template('communityforum.html')
+    user = get_current_user()  # or however you're fetching the current user
+    return render_template('communityforum.html', user=user)
 
 @app.route('/chatbot')
 def chatbot():
