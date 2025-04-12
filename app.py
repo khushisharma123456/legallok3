@@ -138,7 +138,7 @@ def lawyer_dashboard():
         return redirect(url_for('login'))
 
     lawyer = Lawyer.query.get(session['lawyer_id'])
-    return render_template('lawyer dashboard (1).html', lawyer=lawyer)
+    return render_template('lawyer dashboard.html', lawyer=lawyer)
 
 
 @app.route('/logout')
