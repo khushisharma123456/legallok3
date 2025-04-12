@@ -176,7 +176,7 @@ def form_filling():
 
 @app.route('/form_filled')
 def form_filled():
-    return render_template('filled form.html')
+    return render_template('filled forms.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
