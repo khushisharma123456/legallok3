@@ -552,23 +552,23 @@
                 <i class="fas fa-balance-scale"></i>
                 <h3>Legal Lok</h3>
             </div>
-            <a href="dashboard.html" class="sidebar-item active">
+            <a href="/dashboard" class="sidebar-item active">
                 <i class="fas fa-home"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="chatbot.html" class="sidebar-item">
+            <a href="/chatbot" class="sidebar-item">
                 <i class="fas fa-robot"></i>
                 <span>Legal Chatbot</span>
             </a>
-            <a href="forms.html" class="sidebar-item">
+            <a href="/form" class="sidebar-item">
                 <i class="fas fa-file-alt"></i>
                 <span>Forms</span>
             </a>
-            <a href="forum.html" class="sidebar-item">
+            <a href="/community" class="sidebar-item">
                 <i class="fas fa-users"></i>
                 <span>Community Forum</span>
             </a>
-            <a href="petitions.html" class="sidebar-item">
+            <a href="/form_filled" class="sidebar-item">
                 <i class="fas fa-gavel"></i>
                 <span>Petitions</span>
             </a>
@@ -600,11 +600,11 @@
                         <div class="user-avatar">
                             <i class="fas fa-user"></i>
                         </div>
-                        <span class="user-name">John Doe</span>
+                        <span class="user-name">{{ user.full_name }}</span>
                     </div>
                     <button class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span class="logout-text">Logout</span>
+                        <a href = "/logout"><span class="logout-text">Logout</span></a>
                     </button>
                 </div>
             </nav>
