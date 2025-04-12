@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 
 app = Flask(__name__)
