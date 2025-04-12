@@ -18,6 +18,9 @@ body {
     background-color: var(--background);
     color: #333;
 }
+a {
+    text-decoration: none;
+}
 
 .forms-section {
     background: white;

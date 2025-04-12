@@ -13,6 +13,9 @@ body {
     background-color: #f5f7fa;
     color: #333;
 }
+a {
+    text-decoration: none;
+}
 
 /* Top Navigation Bar */
 .top-nav {
