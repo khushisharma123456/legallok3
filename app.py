@@ -174,6 +174,14 @@ def answerquestion():
 def form_filling():
     return render_template('form filling.html')
 
+@app.route('/form_filled')
+def form_filled():
+    return render_template('filled form.html')
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    return render_template('form filling.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
