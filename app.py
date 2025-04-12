@@ -152,7 +152,7 @@ def logout():
 
 @app.route('/form')
 def form():
-    return render_template('form.html')
+    return render_template('form2.html')
 
 @app.route('/community')
 def community():
