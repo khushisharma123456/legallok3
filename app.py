@@ -180,8 +180,3 @@ def form_filled():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    return render_template('form filling.html')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
