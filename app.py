@@ -186,7 +186,6 @@ def lawyer_cases():
 def lawyer_settings():
     return render_template('lawyer settings.html')
 
-
 # ----------------- RUN -----------------
 
 if __name__ == "__main__":
