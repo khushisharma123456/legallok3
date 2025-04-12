@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Lok - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-blue: #82520b;
+            --dark-blue: #5e340c;
+            --light-blue: #975c31;
+            --accent-blue: #a6c1ff;
+            --primary-brown: #5D4037;
+            --dark-brown: #3E2723;
+            --light-brown: #8D6E63;
+            --accent-brown: #A1887F;
+            --background: #f8f9fc;
+            --card-bg: #ffffff;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
+            --info: #36b9cc;
+            --text-dark: #5a5c69;
+            --text-light: #858796;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .sidebar-collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .sidebar-header h3 {
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .sidebar-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-item:hover {
+            color: var(--primary-blue);
+            background-color: rgba(78, 115, 223, 0.1);
+        }
+
+        .sidebar-item.active {
+            color: var(--primary-blue);
+            border-left: 3px solid var(--primary-blue);
+            background-color: rgba(78, 115, 223, 0.1);
+        }
+
+        .sidebar-collapsed .sidebar-item span {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-item i {
+            margin-right: 0;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-collapsed .sidebar-header h3 {
+            display: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 75px;
+            background: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 99;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #d1d3e2;
+            border-radius: 4px;
+            width: 300px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 20px;
+            flex: 1;
+        }
+
+        /* Section Styling */
+        .section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header h2 i {
+            margin-right: 10px;
+            color: var(--primary-blue);
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 0.5rem 1.5rem 0 rgba(58, 59, 69, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Template Cards */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .template-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .template-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 30px;
+            color: white;
+        }
+
+        .business-bg { background-color: var(--primary-blue); }
+        .education-bg { background-color: var(--success); }
+        .healthcare-bg { background-color: var(--info); }
+        .surveys-bg { background-color: var(--warning); }
+        .personal-bg { background-color: var(--danger); }
+
+        /* Form Cards */
+        .form-card {
+            margin-bottom: 20px;
+        }
+
+        .form-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .form-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-progress {
+            height: 10px;
+            background-color: #eaecf4;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-blue);
+            border-radius: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn i {
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .btn-outline {
+            background-color: white;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9ff;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #17a673;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #be2617;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #dda20a;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Search and Filter */
+        .search-filter-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #d1d3e2;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-btn {
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #d1d3e2;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #d1d3e2;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 5px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            min-width: 200px;
+            display: none;
+        }
+
+        .filter-options.show {
+            display: block;
+        }
+
+        .filter-option {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 4px;
+        }
+
+        .filter-option:hover {
+            background-color: #f8f9fc;
+        }
+
+        .filter-option input {
+            margin-right: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-bar input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .search-filter-container {
+                flex-direction: column;
+            }
+
+            .search-bar input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-nav {
+                padding: 0 10px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card-header {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .form-actions {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-balance-scale"></i>
+                <h3>Legal Lok</h3>
+            </div>
+            <a href="dashboard.html" class="sidebar-item active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="chatbot.html" class="sidebar-item">
+                <i class="fas fa-robot"></i>
+                <span>Legal Chatbot</span>
+            </a>
+            <a href="forms.html" class="sidebar-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Forms</span>
+            </a>
+            <a href="forum.html" class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <span>Community Forum</span>
+            </a>
+            <a href="petitions.html" class="sidebar-item">
+                <i class="fas fa-gavel"></i>
+                <span>Petitions</span>
+            </a>
+            <a href="notifications.html" class="sidebar-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="settings.html" class="sidebar-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navigation -->
+            <nav class="top-nav">
+                <div class="top-nav-left">
+                    <button class="toggle-sidebar" id="toggleSidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="user-name">John Doe</span>
+                    </div>
+                    <button class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="logout-text">Logout</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Welcome Banner -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-gavel"></i> Welcome to Legal Lok</h2>
+                    </div>
+                    <p>Your one-stop solution for all legal documentation needs. Get started by exploring templates or continuing your draft forms.</p>
+                </div>
+
+                <!-- Explore Templates Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-search"></i> Explore Templates</h2>
+                    </div>
+                    
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container">
+                        <div class="search-container">
+                            <input type="text" class="search-input" id="templateSearch" placeholder="Search templates...">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                        <div class="filter-dropdown">
+                            <button class="filter-btn" id="filterBtn">
+                                <i class="fas fa-filter"></i>
+                                <span>Filter</span>
+                            </button>
+                            <div class="filter-options" id="filterOptions">
+                                <div class="filter-option">
+                                    <input type="checkbox" id="filterBusiness" checked>
+                                    <label for="filterBusiness">Business</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="filterEducation" checked>
+                                    <label for="filterEducation">Education</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="filterHealthcare" checked>
+                                    <label for="filterHealthcare">Healthcare</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="filterSurveys" checked>
+                                    <label for="filterSurveys">Surveys</label>
+                                </div>
+                                <div class="filter-option">
+                                    <input type="checkbox" id="filterPersonal" checked>
+                                    <label for="filterPersonal">Personal</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Templates -->
+                    <h3>Business</h3>
+                    <div class="templates-grid" data-category="business">
+                        <div class="card template-card" onclick="loadTemplate('business1')">
+                            <div class="template-preview business-bg">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <p>Employment Contract</p>
+                        </div>
+                        <div class="card template-card" onclick="loadTemplate('business2')">
+                            <div class="template-preview business-bg">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <p>NDA Agreement</p>
+                        </div>
+                        <div class="card template-card" onclick="loadTemplate('business3')">
+                            <div class="template-preview business-bg">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <p>Partnership Agreement</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Healthcare Templates -->
+                    <h3>Healthcare</h3>
+                    <div class="templates-grid" data-category="healthcare">
+                        <div class="card template-card" onclick="loadTemplate('health1')">
+                            <div class="template-preview healthcare-bg">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <p>Patient Intake</p>
+                        </div>
+                        <div class="card template-card" onclick="loadTemplate('health2')">
+                            <div class="template-preview healthcare-bg">
+                                <i class="fas fa-procedures"></i>
+                            </div>
+                            <p>Medical Release</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Templates -->
+                    <h3>Personal</h3>
+                    <div class="templates-grid" data-category="personal">
+                        <div class="card template-card" onclick="loadTemplate('personal1')">
+                            <div class="template-preview personal-bg">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <p>Lease Agreement</p>
+                        </div>
+                        <div class="card template-card" onclick="loadTemplate('personal2')">
+                            <div class="template-preview personal-bg">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <p>Vehicle Sale</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Draft Forms Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-edit"></i> Draft Forms</h2>
+                    </div>
+                    <div id="draftsList">
+                        <!-- Draft forms will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Filled Forms Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-file-contract"></i> Filled Forms</h2>
+                    </div>
+                    <div id="filledFormsList">
+                        <!-- Filled forms will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        const filterBtn = document.getElementById('filterBtn');
+        const filterOptions = document.getElementById('filterOptions');
+        const templateSearch = document.getElementById('templateSearch');
+        const draftsList = document.getElementById('draftsList');
+        const filledFormsList = document.getElementById('filledFormsList');
+
+        // Sample data
+        const drafts = [
+            {
+                id: 'draft1',
+                name: "Lease Agreement",
+                lastSaved: "2 days ago",
+                progress: 65
+            },
+            {
+                id: 'draft2',
+                name: "Divorce Petition",
+                lastSaved: "1 week ago",
+                progress: 30
+            }
+        ];
+
+        const filledForms = [
+            {
+                id: 'filled1',
+                name: "Property Sale Deed",
+                completedDate: "15 Jan 2023",
+                status: "Ready to file"
+            },
+            {
+                id: 'filled2',
+                name: "Employment Contract",
+                completedDate: "5 Mar 2023",
+                status: "Filed on 10 Mar 2023"
+            }
+        ];
+
+        // Toggle sidebar
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+            
+            // Update logout button text visibility
+            document.querySelector('.logout-text').classList.toggle('d-none');
+        });
+
+        // Toggle filter options
+        filterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            filterOptions.classList.toggle('show');
+        });
+
+        // Close filter options when clicking outside
+        document.addEventListener('click', () => {
+            filterOptions.classList.remove('show');
+        });
+
+        // Template search functionality
+        templateSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const templateCards = document.querySelectorAll('.template-card');
+            
+            templateCards.forEach(card => {
+                const templateName = card.querySelector('p').textContent.toLowerCase();
+                if (templateName.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter templates by category
+        document.querySelectorAll('.filter-option input').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const category = checkbox.id.replace('filter', '').toLowerCase();
+                const templateGrids = document.querySelectorAll('.templates-grid');
+                
+                if (checkbox.checked) {
+                    templateGrids.forEach(grid => {
+                        if (grid.dataset.category === category) {
+                            grid.style.display = 'grid';
+                        }
+                    });
+                } else {
+                    templateGrids.forEach(grid => {
+                        if (grid.dataset.category === category) {
+                            grid.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+
+        // Load template
+        function loadTemplate(templateId) {
+            alert(`Loading template: ${templateId}`);
+            // In a real app, this would redirect to the form builder with the selected template
+            // window.location.href = `form-builder.html?template=${templateId}`;
+        }
+
+        // Render draft forms
+        function renderDrafts() {
+            draftsList.innerHTML = drafts.map(draft => `
+                <div class="card form-card">
+                    <div class="form-card-header">
+                        <div class="form-name">${draft.name}</div>
+                        <div class="form-date">Last saved: ${draft.lastSaved}</div>
+                    </div>
+                    <div class="form-progress">
+                        <div class="progress-bar" style="width: ${draft.progress}%"></div>
+                    </div>
+                    <p>${draft.progress}% completed</p>
+                    <div class="form-actions">
+                        <button class="btn btn-danger" onclick="deleteDraft('${draft.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-primary" onclick="continueDraft('${draft.id}')">
+                            <i class="fas fa-pen"></i> Continue
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render filled forms
+        function renderFilledForms() {
+            filledFormsList.innerHTML = filledForms.map(form => `
+                <div class="card form-card">
+                    <div class="form-card-header">
+                        <div class="form-name">${form.name}</div>
+                        <div class="form-date">Completed: ${form.completedDate}</div>
+                    </div>
+                    <p>Status: ${form.status}</p>
+                    <div class="form-actions">
+                        <button class="btn btn-outline" onclick="downloadForm('${form.id}')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-success" ${form.status.includes('Filed') ? 'disabled' : ''} 
+                                onclick="fileForm('${form.id}')">
+                            <i class="fas fa-paper-plane"></i> ${form.status.includes('Filed') ? 'Already Filed' : 'File Now'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Form actions
+        function deleteDraft(formId) {
+            if (confirm(`Are you sure you want to delete this draft?`)) {
+                alert(`Draft deleted`);
+                // In real app, would remove from array and re-render
+            }
+        }
+
+        function continueDraft(formId) {
+            alert(`Continuing draft`);
+            // In real app, would open form builder with saved data
+        }
+
+        function downloadForm(formId) {
+            alert(`Downloading form`);
+            // In real app, would generate and download PDF
+        }
+
+        function fileForm(formId) {
+            alert(`Filing form with authorities`);
+            // In real app, would submit to appropriate authority
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDrafts();
+            renderFilledForms();
+            
+            // Responsive sidebar for mobile
+            if (window.innerWidth < 992) {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('show');
+            }
+        });
+
+        // Responsive adjustments
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 992) {
+                sidebar.classList.remove('sidebar-collapsed');
+            } else {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
