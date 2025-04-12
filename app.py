@@ -134,7 +134,7 @@ def lawyer_dashboard():
 
     lawyer_id = session.get('lawyer_id')
     lawyer = Lawyer.query.get(lawyer_id)
-    return render_template('lawyer dashboard (1).html', lawyer=lawyer)
+    return render_template('lawyer dashboard.html', lawyer=lawyer)
 
 
 @app.route('/dashboard')
