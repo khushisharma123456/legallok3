@@ -583,20 +583,44 @@
         });
 
         // Form submission
-        document.getElementById('askQuestionForm').addEventListener('submit', function(e) {
+        document.getElementById('askQuestionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Get form values
             const title = document.getElementById('questionTitle').value;
-            const details = document.getElementById('questionDetails').value;
+            const content = document.getElementById('questionDetails').value;
             const category = document.querySelector('input[name="category"]:checked').value;
             
-            // In a real app, you would send this to your backend
-            console.log('Question submitted:', { title, details, category });
+            // Format the content with category information
+            const formattedContent = `Category: ${category}\n\n${content}`;
             
-            // Show success message and redirect
-            alert('Your question has been posted successfully!');
-            window.location.href = '/forum';
+            try {
+                // Create the post in the community forum
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        content: formattedContent
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to create post');
+                }
+
+                const result = await response.json();
+                
+                // Show success message and redirect to the community forum
+                alert('Your question has been posted successfully!');
+                window.location.href = '/community';
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert('Failed to post your question: ' + error.message);
+            }
         });
 
         // Sidebar navigation

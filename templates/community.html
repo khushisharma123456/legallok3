@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Community Forum</h2>
+            <div class="mb-4">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+                    Create New Post
+                </button>
+            </div>
+            <div id="posts-container">
+                <!-- Posts will be loaded here -->
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Forum Guidelines</h5>
+                    <ul class="list-unstyled">
+                        <li>✓ Be respectful and professional</li>
+                        <li>✓ Stay on topic</li>
+                        <li>✓ No spam or advertising</li>
+                        <li>✓ Use appropriate language</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Post Modal -->
+<div class="modal fade" id="newPostModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newPostForm">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="postTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">Content</label>
+                        <textarea class="form-control" id="postContent" rows="4" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="createPost()">Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Post Detail Modal -->
+<div class="modal fade" id="postDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postDetailTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="post-content mb-4">
+                    <p id="postDetailContent" class="mb-3"></p>
+                    <small class="text-muted" id="postDetailMeta"></small>
+                </div>
+                <hr>
+                <h6>Comments</h6>
+                <div id="comments-container" class="mb-3">
+                    <!-- Comments will be loaded here -->
+                </div>
+                <form id="commentForm" class="mt-3">
+                    <div class="mb-3">
+                        <textarea class="form-control" id="commentContent" rows="2" placeholder="Write a comment..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPostId = null;
+
+function loadPosts() {
+    fetch('/api/posts')
+        .then(response => response.json())
+        .then(posts => {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = posts.map(post => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${post.title}</h5>
+                        <p class="card-text">${post.content.substring(0, 200)}${post.content.length > 200 ? '...' : ''}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                Posted by ${post.author} on ${new Date(post.created_at).toLocaleDateString()}
+                            </small>
+                            <button class="btn btn-outline-primary btn-sm" onclick="showPostDetail(${post.id})">
+                                View Discussion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(error => console.error('Error loading posts:', error));
+}
+
+function createPost() {
+    const title = document.getElementById('postTitle').value;
+    const content = document.getElementById('postContent').value;
+
+    fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('newPostModal'));
+            modal.hide();
+            document.getElementById('newPostForm').reset();
+            loadPosts();
+        }
+    })
+    .catch(error => console.error('Error creating post:', error));
+}
+
+function showPostDetail(postId) {
+    currentPostId = postId;
+    fetch(`/api/posts/${postId}`)
+        .then(response => response.json())
+        .then(post => {
+            document.getElementById('postDetailTitle').textContent = post.title;
+            document.getElementById('postDetailContent').textContent = post.content;
+            document.getElementById('postDetailMeta').textContent = 
+                `Posted by ${post.user.full_name} on ${new Date(post.created_at).toLocaleDateString()}`;
+            
+            loadComments(postId);
+            
+            const modal = new bootstrap.Modal(document.getElementById('postDetailModal'));
+            modal.show();
+        })
+        .catch(error => console.error('Error loading post details:', error));
+}
+
+function loadComments(postId) {
+    fetch(`/api/posts/${postId}/comments`)
+        .then(response => response.json())
+        .then(comments => {
+            const container = document.getElementById('comments-container');
+            if (comments.length === 0) {
+                container.innerHTML = '<p class="text-muted">No comments yet. Be the first to comment!</p>';
+            } else {
+                container.innerHTML = comments.map(comment => `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="card-text">${comment.content}</p>
+                            <small class="text-muted">
+                                ${comment.user.full_name} - ${new Date(comment.created_at).toLocaleDateString()}
+                            </small>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(error => console.error('Error loading comments:', error));
+}
+
+document.getElementById('commentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const content = document.getElementById('commentContent').value;
+    
+    if (!content.trim()) {
+        alert('Please enter a comment');
+        return;
+    }
+    
+    fetch(`/api/posts/${currentPostId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            document.getElementById('commentContent').value = '';
+            loadComments(currentPostId);
+        }
+    })
+    .catch(error => {
+        console.error('Error posting comment:', error);
+        alert('Error posting comment. Please try again.');
+    });
+});
+
+// Load posts when the page loads
+document.addEventListener('DOMContentLoaded', loadPosts);
+</script>
+{% endblock %} 

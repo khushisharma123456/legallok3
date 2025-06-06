@@ -568,7 +568,7 @@
                 <i class="fas fa-users"></i>
                 <span>Community Forum</span>
             </a>
-            <a href="/form_filled" class="sidebar-item">
+            <a href="{{ url_for('filled_forms') }}" class="sidebar-item">
                 <i class="fas fa-gavel"></i>
                 <span>Petitions</span>
             </a>
@@ -837,9 +837,8 @@
 
         // Load template
         function loadTemplate(templateId) {
-            alert(`Loading template: ${templateId}`);
-            // In a real app, this would redirect to the form builder with the selected template
-            // window.location.href = `form-builder.html?template=${templateId}`;
+            // Redirect to form.html with the template ID
+            window.location.href = `/form/${templateId}`;
         }
 
         // Render draft forms
@@ -931,6 +930,47 @@
                 sidebar.classList.remove('show');
             }
         });
+
+        function submitForm() {
+            const formData = {};
+            const form = document.getElementById('dynamicForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (input.name) {
+                    formData[input.name] = input.value;
+                }
+            });
+
+            // Get the form title from the current form
+            const formTitle = document.querySelector('.form-title').textContent;
+
+            // Send the form data to the server
+            fetch('/api/submit-form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    form_id: currentFormId,
+                    form_title: formTitle,
+                    form_data: formData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error submitting form: ' + data.error);
+                } else {
+                    alert('Form submitted successfully!');
+                    window.location.href = '/filled-forms';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting form');
+            });
+        }
     </script>
 </body>
 </html>

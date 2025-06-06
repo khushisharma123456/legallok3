@@ -1,0 +1,1046 @@
+{
+  "forms": [
+    {
+      "id": "rti",
+      "title": "Right to Information (RTI) Application",
+      "description": "Apply for information under the Right to Information Act, 2005",
+      "icon": "fa-file-alt",
+      "category": "Government",
+      "fields": [
+        {
+          "name": "applicantName",
+          "label": "Full Name of Applicant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "address",
+          "label": "Complete Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "contactNumber",
+          "label": "Mobile Number",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "name": "email",
+          "label": "Email ID",
+          "type": "email",
+          "required": false
+        },
+        {
+          "name": "authorityName",
+          "label": "Name of Public Authority",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "authorityAddress",
+          "label": "Address of Public Authority",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "informationSought",
+          "label": "Information Sought (Point-wise)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "1. \n2. \n3. "
+        },
+        {
+          "name": "paymentMode",
+          "label": "Mode of Payment",
+          "type": "select",
+          "required": true,
+          "options": [
+            {"value": "ipo", "text": "Indian Postal Order"},
+            {"value": "dd", "text": "Demand Draft"},
+            {"value": "cash", "text": "Cash (if submitting in person)"},
+            {"value": "online", "text": "Online Payment"}
+          ]
+        },
+        {
+          "name": "paymentDetails",
+          "label": "Payment Details (Number/Reference)",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "place",
+          "label": "Place",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Applicant Details",
+          "content": "Fill in your complete name, address, and contact information. Ensure your mobile number and email are correct for communication."
+        },
+        {
+          "title": "Step 2: Public Authority",
+          "content": "Mention the complete name and address of the government department or public authority you're addressing the RTI to."
+        },
+        {
+          "title": "Step 3: Information Sought",
+          "content": "Clearly specify the information you require. Be precise and mention relevant time periods if applicable. You can ask multiple questions but keep them numbered."
+        },
+        {
+          "title": "Step 4: Payment Details",
+          "content": "RTI applications typically require a fee of ₹10. Mention how you've paid (IPO, demand draft, court fee stamp, etc.) and include proof."
+        },
+        {
+          "title": "Step 5: Submit Application",
+          "content": "Sign and date the application. Keep a copy for your records before submitting to the Public Information Officer of the concerned department."
+        }
+      ]
+    },
+    {
+      "id": "consumer_complaint",
+      "title": "Consumer Complaint Form",
+      "description": "File a complaint against unfair trade practices or defective products",
+      "icon": "fa-exclamation-circle",
+      "category": "Consumer Rights",
+      "fields": [
+        {
+          "name": "complainantName",
+          "label": "Full Name of Complainant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "address",
+          "label": "Complete Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "phone",
+          "label": "Phone Number",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "name": "email",
+          "label": "Email ID",
+          "type": "email",
+          "required": false
+        },
+        {
+          "name": "oppositeParty",
+          "label": "Name of Opposite Party/Company",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "oppositePartyAddress",
+          "label": "Address of Opposite Party",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "productDetails",
+          "label": "Product/Service Details",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "complaintDetails",
+          "label": "Complaint Details",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "reliefSought",
+          "label": "Relief Sought",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Personal Information",
+          "content": "Fill in your complete name, address, and contact information accurately."
+        },
+        {
+          "title": "Step 2: Opposite Party Details",
+          "content": "Provide the complete name and address of the company or person against whom you are filing the complaint."
+        },
+        {
+          "title": "Step 3: Product/Service Information",
+          "content": "Describe the product or service in detail, including purchase date, price, and any relevant invoice numbers."
+        },
+        {
+          "title": "Step 4: Complaint Details",
+          "content": "Clearly explain the nature of your complaint, including dates of incidents and any communication with the opposite party."
+        },
+        {
+          "title": "Step 5: Relief Sought",
+          "content": "Specify what resolution or compensation you are seeking from the opposite party."
+        }
+      ]
+    },
+    {
+      "id": "business1",
+      "title": "Employment Contract",
+      "description": "Standard employment contract template for hiring employees",
+      "icon": "fa-briefcase",
+      "category": "Business",
+      "fields": [
+        {
+          "name": "employerName",
+          "label": "Employer Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "employerAddress",
+          "label": "Employer Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "employeeName",
+          "label": "Employee Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "employeeAddress",
+          "label": "Employee Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "position",
+          "label": "Position/Job Title",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "startDate",
+          "label": "Start Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "salary",
+          "label": "Salary",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "benefits",
+          "label": "Benefits",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "workingHours",
+          "label": "Working Hours",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "noticePeriod",
+          "label": "Notice Period",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "confidentiality",
+          "label": "Confidentiality Clause",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "nonCompete",
+          "label": "Non-Compete Clause",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signatureEmployer",
+          "label": "Employer Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "signatureEmployee",
+          "label": "Employee Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Employer Information",
+          "content": "Fill in the complete name and address of the employer (company or individual)."
+        },
+        {
+          "title": "Step 2: Employee Information",
+          "content": "Provide the complete name and address of the employee."
+        },
+        {
+          "title": "Step 3: Job Details",
+          "content": "Specify the position, start date, salary, and working hours."
+        },
+        {
+          "title": "Step 4: Terms and Conditions",
+          "content": "Include notice period, confidentiality clause, and non-compete clause."
+        },
+        {
+          "title": "Step 5: Signatures",
+          "content": "Both employer and employee must sign the contract and include the date."
+        }
+      ]
+    },
+    {
+      "id": "business2",
+      "title": "NDA Agreement",
+      "description": "Non-Disclosure Agreement for protecting confidential information",
+      "icon": "fa-file-contract",
+      "category": "Business",
+      "fields": [
+        {
+          "name": "disclosingParty",
+          "label": "Disclosing Party Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "disclosingPartyAddress",
+          "label": "Disclosing Party Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "receivingParty",
+          "label": "Receiving Party Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "receivingPartyAddress",
+          "label": "Receiving Party Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "purpose",
+          "label": "Purpose of Disclosure",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "confidentialInfo",
+          "label": "Description of Confidential Information",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "label": "Duration of Agreement",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "exceptions",
+          "label": "Exceptions to Confidentiality",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "returnOfMaterials",
+          "label": "Return of Materials",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signatureDisclosing",
+          "label": "Disclosing Party Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "signatureReceiving",
+          "label": "Receiving Party Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Party Information",
+          "content": "Fill in the complete names and addresses of both the disclosing and receiving parties."
+        },
+        {
+          "title": "Step 2: Purpose and Information",
+          "content": "Specify the purpose of the disclosure and describe the confidential information being shared."
+        },
+        {
+          "title": "Step 3: Terms",
+          "content": "Include the duration of the agreement and any exceptions to the confidentiality obligations."
+        },
+        {
+          "title": "Step 4: Return of Materials",
+          "content": "Specify the conditions for returning confidential materials when the agreement ends."
+        },
+        {
+          "title": "Step 5: Signatures",
+          "content": "Both parties must sign the agreement and include the date."
+        }
+      ]
+    },
+    {
+      "id": "business3",
+      "title": "Partnership Agreement",
+      "description": "Agreement for establishing a business partnership",
+      "icon": "fa-handshake",
+      "category": "Business",
+      "fields": [
+        {
+          "name": "partnershipName",
+          "label": "Partnership Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "businessPurpose",
+          "label": "Business Purpose",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "partner1Name",
+          "label": "Partner 1 Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "partner1Address",
+          "label": "Partner 1 Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "partner2Name",
+          "label": "Partner 2 Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "partner2Address",
+          "label": "Partner 2 Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "capitalContribution",
+          "label": "Capital Contribution",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "profitSharing",
+          "label": "Profit Sharing",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "managementRights",
+          "label": "Management Rights and Responsibilities",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "dissolution",
+          "label": "Dissolution Terms",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signaturePartner1",
+          "label": "Partner 1 Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "signaturePartner2",
+          "label": "Partner 2 Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Partnership Details",
+          "content": "Provide the partnership name and the purpose of the business."
+        },
+        {
+          "title": "Step 2: Partner Information",
+          "content": "Fill in the complete names and addresses of all partners."
+        },
+        {
+          "title": "Step 3: Financial Terms",
+          "content": "Specify the capital contribution and profit sharing arrangements."
+        },
+        {
+          "title": "Step 4: Management and Dissolution",
+          "content": "Detail the management rights, responsibilities, and terms for dissolution."
+        },
+        {
+          "title": "Step 5: Signatures",
+          "content": "All partners must sign the agreement and include the date."
+        }
+      ]
+    },
+    {
+      "id": "health1",
+      "title": "Patient Intake Form",
+      "description": "Form for collecting patient information during initial visit",
+      "icon": "fa-user-md",
+      "category": "Healthcare",
+      "fields": [
+        {
+          "name": "patientName",
+          "label": "Patient Full Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "dateOfBirth",
+          "label": "Date of Birth",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "gender",
+          "label": "Gender",
+          "type": "select",
+          "required": true,
+          "options": [
+            {"value": "male", "text": "Male"},
+            {"value": "female", "text": "Female"},
+            {"value": "other", "text": "Other"},
+            {"value": "prefer_not_to_say", "text": "Prefer not to say"}
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "phone",
+          "label": "Phone Number",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "email",
+          "required": false
+        },
+        {
+          "name": "emergencyContact",
+          "label": "Emergency Contact Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "emergencyPhone",
+          "label": "Emergency Contact Phone",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "name": "insuranceProvider",
+          "label": "Insurance Provider",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "insurancePolicyNumber",
+          "label": "Insurance Policy Number",
+          "type": "text",
+          "required": false
+        },
+        {
+          "name": "medicalHistory",
+          "label": "Medical History",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "currentMedications",
+          "label": "Current Medications",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "allergies",
+          "label": "Allergies",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "reasonForVisit",
+          "label": "Reason for Visit",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signature",
+          "label": "Patient Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Personal Information",
+          "content": "Fill in your complete name, date of birth, gender, and contact information."
+        },
+        {
+          "title": "Step 2: Emergency Contact",
+          "content": "Provide the name and phone number of someone to contact in case of emergency."
+        },
+        {
+          "title": "Step 3: Insurance Information",
+          "content": "If you have health insurance, provide your insurance provider and policy number."
+        },
+        {
+          "title": "Step 4: Medical Information",
+          "content": "Detail your medical history, current medications, allergies, and reason for visit."
+        },
+        {
+          "title": "Step 5: Signature",
+          "content": "Sign the form and include the date to confirm the information is accurate."
+        }
+      ]
+    },
+    {
+      "id": "health2",
+      "title": "Medical Release Form",
+      "description": "Authorization for release of medical records",
+      "icon": "fa-procedures",
+      "category": "Healthcare",
+      "fields": [
+        {
+          "name": "patientName",
+          "label": "Patient Full Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "dateOfBirth",
+          "label": "Date of Birth",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "address",
+          "label": "Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "phone",
+          "label": "Phone Number",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "name": "healthcareProvider",
+          "label": "Healthcare Provider Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "providerAddress",
+          "label": "Healthcare Provider Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "recordsRequested",
+          "label": "Records Requested",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "dateRange",
+          "label": "Date Range of Records",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "purpose",
+          "label": "Purpose of Release",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "recipientName",
+          "label": "Recipient Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "recipientAddress",
+          "label": "Recipient Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "expirationDate",
+          "label": "Expiration Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "signature",
+          "label": "Patient Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Patient Information",
+          "content": "Fill in your complete name, date of birth, address, and phone number."
+        },
+        {
+          "title": "Step 2: Healthcare Provider",
+          "content": "Provide the name and address of the healthcare provider from whom you're requesting records."
+        },
+        {
+          "title": "Step 3: Records Details",
+          "content": "Specify which records you're requesting and the date range for those records."
+        },
+        {
+          "title": "Step 4: Recipient Information",
+          "content": "Provide the name and address of the person or organization to whom the records should be sent."
+        },
+        {
+          "title": "Step 5: Authorization",
+          "content": "Sign the form and include the date to authorize the release of your medical records."
+        }
+      ]
+    },
+    {
+      "id": "personal1",
+      "title": "Lease Agreement",
+      "description": "Standard lease agreement for residential or commercial property",
+      "icon": "fa-home",
+      "category": "Personal",
+      "fields": [
+        {
+          "name": "landlordName",
+          "label": "Landlord Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "landlordAddress",
+          "label": "Landlord Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "tenantName",
+          "label": "Tenant Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "tenantAddress",
+          "label": "Tenant Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "propertyAddress",
+          "label": "Property Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "leaseTerm",
+          "label": "Lease Term",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "startDate",
+          "label": "Start Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "endDate",
+          "label": "End Date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "rentAmount",
+          "label": "Rent Amount",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "paymentDueDate",
+          "label": "Payment Due Date",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "securityDeposit",
+          "label": "Security Deposit",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "utilities",
+          "label": "Utilities",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "maintenance",
+          "label": "Maintenance Responsibilities",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "pets",
+          "label": "Pet Policy",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signatureLandlord",
+          "label": "Landlord Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "signatureTenant",
+          "label": "Tenant Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Party Information",
+          "content": "Fill in the complete names and addresses of both the landlord and tenant."
+        },
+        {
+          "title": "Step 2: Property Details",
+          "content": "Provide the address of the property being leased and the lease term (start and end dates)."
+        },
+        {
+          "title": "Step 3: Financial Terms",
+          "content": "Specify the rent amount, payment due date, and security deposit."
+        },
+        {
+          "title": "Step 4: Additional Terms",
+          "content": "Detail utilities, maintenance responsibilities, and pet policy."
+        },
+        {
+          "title": "Step 5: Signatures",
+          "content": "Both landlord and tenant must sign the agreement and include the date."
+        }
+      ]
+    },
+    {
+      "id": "personal2",
+      "title": "Vehicle Sale Agreement",
+      "description": "Agreement for the sale of a vehicle between private parties",
+      "icon": "fa-car",
+      "category": "Personal",
+      "fields": [
+        {
+          "name": "sellerName",
+          "label": "Seller Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "sellerAddress",
+          "label": "Seller Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "buyerName",
+          "label": "Buyer Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "buyerAddress",
+          "label": "Buyer Address",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "vehicleMake",
+          "label": "Vehicle Make",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "vehicleModel",
+          "label": "Vehicle Model",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "vehicleYear",
+          "label": "Vehicle Year",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "vehicleColor",
+          "label": "Vehicle Color",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "vin",
+          "label": "Vehicle Identification Number (VIN)",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "mileage",
+          "label": "Current Mileage",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "salePrice",
+          "label": "Sale Price",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "paymentMethod",
+          "label": "Payment Method",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "vehicleCondition",
+          "label": "Vehicle Condition",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "warranty",
+          "label": "Warranty Information",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "signatureSeller",
+          "label": "Seller Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "signatureBuyer",
+          "label": "Buyer Signature",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "required": true
+        }
+      ],
+      "instructions": [
+        {
+          "title": "Step 1: Party Information",
+          "content": "Fill in the complete names and addresses of both the seller and buyer."
+        },
+        {
+          "title": "Step 2: Vehicle Details",
+          "content": "Provide detailed information about the vehicle being sold, including make, model, year, color, VIN, and mileage."
+        },
+        {
+          "title": "Step 3: Sale Terms",
+          "content": "Specify the sale price and payment method."
+        },
+        {
+          "title": "Step 4: Vehicle Condition and Warranty",
+          "content": "Describe the condition of the vehicle and any warranty information."
+        },
+        {
+          "title": "Step 5: Signatures",
+          "content": "Both seller and buyer must sign the agreement and include the date."
+        }
+      ]
+    }
+  ]
+} 
