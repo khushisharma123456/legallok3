@@ -50,6 +50,12 @@
             z-index: 100;
         }
         
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
         .logo {
             display: flex;
             align-items: center;
@@ -396,6 +402,40 @@
             margin-right: 0.5rem;
         }
         
+        /* Language Selector Styles */
+        .language-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        #languageSelect {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        #translateButton {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #translateButton:hover {
+            background-color: var(--primary-color);
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .content-area {
@@ -431,15 +471,35 @@
     <nav class="top-nav">
         <div class="logo">
             <i class="fas fa-balance-scale"></i>
-            <span>Legal Lok</span>
+            <span data-translatable>Legal Lok</span>
         </div>
         
-        <div class="user-profile">
-            <div class="user-avatar">
-                <i class="fas fa-user"></i>
+        <div class="top-nav-right">
+            <div class="language-container">
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="mr">मराठी</option>
+                    <option value="gu">ગુજરાતી</option>
+                    <option value="pa">ਪੰਜਾਬੀ</option>
+                </select>
+                <button id="translateButton">
+                    <i class="fas fa-language"></i>
+                    <span data-translatable>Translate</span>
+                </button>
             </div>
-            <span class="user-name">{{ user.full_name }}</span>
-            <a href="/logout"><button class="logout-btn">Logout</button></a>
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="user-name">{{ user.full_name }}</span>
+                <a href="/logout"><button class="logout-btn">Logout</button></a>
+            </div>
         </div>
     </nav>
     
@@ -450,49 +510,49 @@
             <div class="sidebar-item active">
                 <a href="/dashboard">
                     <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
+                    <span data-translatable>Dashboard</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="/chatbot">
                     <i class="fas fa-robot"></i>
-                    <span>Legal Chatbot</span>
+                    <span data-translatable>Legal Chatbot</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="/form">
                     <i class="fas fa-file-alt"></i>
-                    <span>Forms</span>
+                    <span data-translatable>Forms</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="/community">
                     <i class="fas fa-users"></i>
-                    <span>Community Forum</span>
+                    <span data-translatable>Community Forum</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="{{ url_for('filled_forms') }}">
                     <i class="fas fa-gavel"></i>
-                    <span>Petitions</span>
+                    <span data-translatable>Petitions</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="#">
                     <i class="fas fa-bell"></i>
-                    <span>Notifications</span>
+                    <span data-translatable>Notifications</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
                 <a href="#">
                     <i class="fas fa-cog"></i>
-                    <span>Settings</span>
+                    <span data-translatable>Settings</span>
                 </a>
             </div>
         </div>
@@ -501,14 +561,14 @@
         <div class="main-content">
             <!-- Welcome Section -->
             <div class="welcome-section">
-                <h1>Welcome back, {{ user.full_name }}!</h1>
-                <p>Here's what's happening with your legal matters today.</p>
+                <h1 data-translatable>Welcome back, {{ user.full_name }}!</h1>
+                <p data-translatable>Here's what's happening with your legal matters today.</p>
             </div>
             
             <!-- Profile Card -->
             <div class="card profile-card">
                 <div class="card-header">
-                    <h2><i class="fas fa-user"></i> My Profile</h2>
+                    <h2><i class="fas fa-user"></i> <span data-translatable>My Profile</span></h2>
                 </div>
                 <div class="card-body">
                     <div class="profile-info">
@@ -523,22 +583,22 @@
                     
                     <div class="profile-details">
                         <div class="detail-item">
-                            <h3>Full Name</h3>
+                            <h3 data-translatable>Full Name</h3>
                             <p>{{ user.full_name }}</p>
                         </div>
                         
                         <div class="detail-item">
-                            <h3>Mobile Number</h3>
+                            <h3 data-translatable>Mobile Number</h3>
                             <p>{{ user.phone }}</p>
                         </div>
                         
                         <div class="detail-item">
-                            <h3>Email Address</h3>
+                            <h3 data-translatable>Email Address</h3>
                             <p>{{ user.email }}</p>
                         </div>
                         
                         <div class="detail-item">
-                            <h3>User ID</h3>
+                            <h3 data-translatable>User ID</h3>
                             <p>LL-{{ user.id + 2023 }}</p>
                         </div>
                     </div>
@@ -548,7 +608,7 @@
             <!-- Notifications Section -->
             <div class="card">
                 <div class="card-header">
-                    <h2><i class="fas fa-bell"></i> Recent Activities</h2>
+                    <h2><i class="fas fa-bell"></i> <span data-translatable>Recent Activities</span></h2>
                 </div>
                 <div class="card-body">
                     <div class="notification-item">
@@ -556,9 +616,9 @@
                             <i class="fas fa-file-signature"></i>
                         </div>
                         <div class="notification-content">
-                            <h4>New Petition Filed</h4>
-                            <p>Your petition regarding property dispute has been successfully submitted.</p>
-                            <div class="notification-time">2 hours ago</div>
+                            <h4 data-translatable>New Petition Filed</h4>
+                            <p data-translatable>Your petition regarding property dispute has been successfully submitted.</p>
+                            <div class="notification-time" data-translatable>2 hours ago</div>
                         </div>
                     </div>
                     
@@ -567,9 +627,9 @@
                             <i class="fas fa-comments"></i>
                         </div>
                         <div class="notification-content">
-                            <h4>Community Response</h4>
-                            <p>You have 3 new responses on your forum post about tenant rights.</p>
-                            <div class="notification-time">5 hours ago</div>
+                            <h4 data-translatable>Community Response</h4>
+                            <p data-translatable>You have 3 new responses on your forum post about tenant rights.</p>
+                            <div class="notification-time" data-translatable>5 hours ago</div>
                         </div>
                     </div>
                     
@@ -578,9 +638,9 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="notification-content">
-                            <h4>Lawyer Connected</h4>
-                            <p>Advocate Priya Sharma has accepted your consultation request.</p>
-                            <div class="notification-time">1 day ago</div>
+                            <h4 data-translatable>Lawyer Connected</h4>
+                            <p data-translatable>Advocate Priya Sharma has accepted your consultation request.</p>
+                            <div class="notification-time" data-translatable>1 day ago</div>
                         </div>
                     </div>
                     
@@ -589,9 +649,9 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="notification-content">
-                            <h4>Form Approved</h4>
-                            <p>Your RTI application form has been approved by the reviewing officer.</p>
-                            <div class="notification-time">2 days ago</div>
+                            <h4 data-translatable>Form Approved</h4>
+                            <p data-translatable>Your RTI application form has been approved by the reviewing officer.</p>
+                            <div class="notification-time" data-translatable>2 days ago</div>
                         </div>
                     </div>
                 </div>
@@ -600,7 +660,7 @@
             <!-- Popular Articles Section -->
             <div class="card">
                 <div class="card-header">
-                    <h2><i class="fas fa-newspaper"></i> Popular Legal News</h2>
+                    <h2><i class="fas fa-newspaper"></i> <span data-translatable>Popular Legal News</span></h2>
                 </div>
                 <div class="card-body">
                     <div id="articles-container" class="articles-grid">
@@ -701,5 +761,14 @@
         });
     </script>
     <script src="static/dashboard.js"></script>
+    <script src="/static/js/bhashini-translator.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bhashiniTranslator = new BhashiniTranslator();
+            document.getElementById('translateButton').addEventListener('click', () => {
+                bhashiniTranslator.translatePage();
+            });
+        });
+    </script>
 </body>
 </html>

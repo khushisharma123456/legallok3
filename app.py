@@ -7,6 +7,7 @@ from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 import pdfkit
 import tempfile
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -645,6 +646,107 @@ def get_post(post_id):
             'full_name': post.user.full_name
         }
     })
+
+# ----------------- TRANSLATION API -----------------
+
+@app.route('/api/translate', methods=['POST'])
+def translate_proxy():
+    try:
+        request_data = request.get_json()
+        print("Received request data:", request_data)  # Debug log
+        
+        if not request_data:
+            return jsonify({
+                'error': 'Invalid Request',
+                'message': 'Missing request data'
+            }), 400
+
+        fallback_only = request_data.get('fallback_only', False)
+        if 'input' in request_data:
+            input_data = request_data['input']
+            source_text = input_data.get('source')
+            source_lang = input_data.get('sourceLanguage', 'en')
+            target_lang = input_data.get('targetLanguage')
+        else:
+            source_text = request_data.get('source')
+            source_lang = request_data.get('sourceLanguage', 'en')
+            target_lang = request_data.get('target')
+
+        if not source_text or not target_lang:
+            return jsonify({
+                'error': 'Invalid Request',
+                'message': 'Missing required fields: source text or target language'
+            }), 400
+
+        # --- CLEAN MOCK TRANSLATIONS DICTIONARY (minimal, valid Python) ---
+        mock_translations = {
+            'Hello': {'hi': 'नमस्ते', 'bn': 'হ্যালো', 'te': 'హలో', 'ta': 'வணக்கம்'},
+            'Legal Assistant': {'hi': 'कानूनी सहायक', 'bn': 'আইনী সহায়ক', 'te': 'న్యాయ సహాయకుడు', 'ta': 'சட்ட உதவியாளர்'},
+            'Dashboard': {'hi': 'डैशबोर्ड', 'bn': 'ড্যাশবোর্ড', 'te': 'డాష్‌బోర్డ్', 'ta': 'டாஷ்போர்ட்'},
+            'Forms': {'hi': 'फॉर्म', 'bn': 'ফর্ম', 'te': 'ఫారమ్‌లు', 'ta': 'படிவங்கள்'},
+            'Translate': {'hi': 'अनुवाद करें', 'bn': 'অনুবাদ', 'te': 'అనువదించు', 'ta': 'மொழிபெயர்'},
+            'Legal Lok': {'hi': 'लीगल लोक', 'bn': 'লিগ্যাল লোক', 'te': 'లీగల్ లోక్', 'ta': 'லீகல் லோக்'}
+        }
+        # --- END MOCK TRANSLATIONS ---
+
+        if fallback_only:
+            print("Fallback-only request, using mock translations...")
+        else:
+            api_url = 'https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/compute'
+            model_id = request_data.get('modelId', 'ai4bharat/indictrans-v2-all-gpu')
+            task = request_data.get('task', 'translation')
+            payload = {
+                "modelId": model_id,
+                "task": task,
+                "input": [{
+                    "source": source_text,
+                    "sourceLanguage": source_lang,
+                    "targetLanguage": target_lang
+                }]
+            }
+            headers = {
+                'ulcaApiKey': 'nEr9Swv6WxarqrQdP2Nafn04E7ZYncNPmJJEqMisDed5cDn62QcQWvQAQ6lcNe5o',
+                'Content-Type': 'application/json'
+            }
+            try:
+                response = requests.post(api_url, json=payload, headers=headers, timeout=30)
+                response_data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+                print("Response from ULCA API:", response_data)  # Debug log
+                if response.status_code == 200 and response_data.get('output'):
+                    output = response_data['output'][0]
+                    return jsonify({
+                        'target': output.get('target', source_text),
+                        'status': 'success (api)',
+                        'source': source_text,
+                        'target_language': target_lang
+                    })
+            except Exception as api_error:
+                print(f"API call failed: {api_error}")
+                # Continue to mock fallback
+
+        if source_text in mock_translations and target_lang in mock_translations[source_text]:
+            translated_text = mock_translations[source_text][target_lang]
+            return jsonify({
+                'target': translated_text,
+                'status': 'success (mock)',
+                'source': source_text,
+                'target_language': target_lang
+            })
+        else:
+            return jsonify({
+                'target': source_text,
+                'status': 'no translation found',
+                'source': source_text,
+                'target_language': target_lang
+            })
+    except Exception as e:
+        print(f"Translation error: {str(e)}")
+        return jsonify({
+            'error': 'Translation Error',
+            'message': str(e),
+            'target': source_text if 'source_text' in locals() else '',
+            'status': 'error'
+        })
 
 # ----------------- RUN -----------------
 

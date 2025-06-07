@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Lok - Dashboard</title>
+    <title data-translatable>Legal Lok - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Global Styles */
@@ -486,6 +486,47 @@
             margin-right: 8px;
         }
 
+        /* Language Selector Styles */
+        .language-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        #languageSelect {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        #translateButton {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #translateButton:hover {
+            background-color: var(--primary-color);
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .sidebar {
@@ -553,35 +594,35 @@
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-balance-scale"></i>
-                <h3>Legal Lok</h3>
+                <h3 data-translatable>Legal Lok</h3>
             </div>
             <a href="/dashboard" class="sidebar-item active">
                 <i class="fas fa-home"></i>
-                <span>Dashboard</span>
+                <span data-translatable>Dashboard</span>
             </a>
             <a href="/chatbot" class="sidebar-item">
                 <i class="fas fa-robot"></i>
-                <span>Legal Chatbot</span>
+                <span data-translatable>Legal Chatbot</span>
             </a>
             <a href="/form" class="sidebar-item">
                 <i class="fas fa-file-alt"></i>
-                <span>Forms</span>
+                <span data-translatable>Forms</span>
             </a>
             <a href="/community" class="sidebar-item">
                 <i class="fas fa-users"></i>
-                <span>Community Forum</span>
+                <span data-translatable>Community Forum</span>
             </a>
             <a href="{{ url_for('filled_forms') }}" class="sidebar-item">
                 <i class="fas fa-gavel"></i>
-                <span>Petitions</span>
+                <span data-translatable>Petitions</span>
             </a>
             <a href="notifications.html" class="sidebar-item">
                 <i class="fas fa-bell"></i>
-                <span>Notifications</span>
+                <span data-translatable>Notifications</span>
             </a>
             <a href="settings.html" class="sidebar-item">
                 <i class="fas fa-cog"></i>
-                <span>Settings</span>
+                <span data-translatable>Settings</span>
             </a>
         </div>
 
@@ -603,117 +644,137 @@
                     </div>
                     <button class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        <a href = "/logout"><span class="logout-text">Logout</span></a>
+                        <a href = "/logout"><span class="logout-text" data-translatable>Logout</span></a>
                     </button>
                 </div>
             </nav>
+
+            <!-- Language Selector -->
+            <div class="language-container">
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="mr">मराठी</option>
+                    <option value="gu">ગુજરાતી</option>
+                    <option value="pa">ਪੰਜਾਬੀ</option>
+                </select>
+                <button id="translateButton">
+                    <i class="fas fa-language"></i>
+                    <span data-translatable>Translate</span>
+                </button>
+            </div>
 
             <!-- Content Area -->
             <div class="content-area">
                 <!-- Welcome Banner -->
                 <div class="section">
                     <div class="section-header">
-                        <h2><i class="fas fa-gavel"></i> Welcome to Legal Lok</h2>
+                        <h2><i class="fas fa-gavel"></i> <span data-translatable>Welcome to Legal Lok</span></h2>
                     </div>
-                    <p>Your one-stop solution for all legal documentation needs. Get started by exploring templates or continuing your draft forms.</p>
+                    <p data-translatable>Your one-stop solution for all legal documentation needs. Get started by exploring templates or continuing your draft forms.</p>
                 </div>
 
                 <!-- Explore Templates Section -->
                 <div class="section">
                     <div class="section-header">
-                        <h2><i class="fas fa-search"></i> Explore Templates</h2>
+                        <h2><i class="fas fa-search"></i> <span data-translatable>Explore Templates</span></h2>
                     </div>
                     
                     <!-- Search and Filter -->
                     <div class="search-filter-container">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="templateSearch" placeholder="Search templates...">
+                            <input type="text" class="search-input" id="templateSearch" data-translatable-placeholder="Search templates...">
                             <i class="fas fa-search search-icon"></i>
                         </div>
                         <div class="filter-dropdown">
                             <button class="filter-btn" id="filterBtn">
                                 <i class="fas fa-filter"></i>
-                                <span>Filter</span>
+                                <span data-translatable>Filter</span>
                             </button>
                             <div class="filter-options" id="filterOptions">
                                 <div class="filter-option">
                                     <input type="checkbox" id="filterBusiness" checked>
-                                    <label for="filterBusiness">Business</label>
+                                    <label for="filterBusiness" data-translatable>Business</label>
                                 </div>
                                 <div class="filter-option">
                                     <input type="checkbox" id="filterEducation" checked>
-                                    <label for="filterEducation">Education</label>
+                                    <label for="filterEducation" data-translatable>Education</label>
                                 </div>
                                 <div class="filter-option">
                                     <input type="checkbox" id="filterHealthcare" checked>
-                                    <label for="filterHealthcare">Healthcare</label>
+                                    <label for="filterHealthcare" data-translatable>Healthcare</label>
                                 </div>
                                 <div class="filter-option">
                                     <input type="checkbox" id="filterSurveys" checked>
-                                    <label for="filterSurveys">Surveys</label>
+                                    <label for="filterSurveys" data-translatable>Surveys</label>
                                 </div>
                                 <div class="filter-option">
                                     <input type="checkbox" id="filterPersonal" checked>
-                                    <label for="filterPersonal">Personal</label>
+                                    <label for="filterPersonal" data-translatable>Personal</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Business Templates -->
-                    <h3>Business</h3>
+                    <h3 data-translatable>Business</h3>
                     <div class="templates-grid" data-category="business">
                         <div class="card template-card" onclick="loadTemplate('business1')">
                             <div class="template-preview business-bg">
                                 <i class="fas fa-briefcase"></i>
                             </div>
-                            <p>Employment Contract</p>
+                            <p data-translatable>Employment Contract</p>
                         </div>
                         <div class="card template-card" onclick="loadTemplate('business2')">
                             <div class="template-preview business-bg">
                                 <i class="fas fa-file-contract"></i>
                             </div>
-                            <p>NDA Agreement</p>
+                            <p data-translatable>NDA Agreement</p>
                         </div>
                         <div class="card template-card" onclick="loadTemplate('business3')">
                             <div class="template-preview business-bg">
                                 <i class="fas fa-handshake"></i>
                             </div>
-                            <p>Partnership Agreement</p>
+                            <p data-translatable>Partnership Agreement</p>
                         </div>
                     </div>
                     
                     <!-- Healthcare Templates -->
-                    <h3>Healthcare</h3>
+                    <h3 data-translatable>Healthcare</h3>
                     <div class="templates-grid" data-category="healthcare">
                         <div class="card template-card" onclick="loadTemplate('health1')">
                             <div class="template-preview healthcare-bg">
                                 <i class="fas fa-user-md"></i>
                             </div>
-                            <p>Patient Intake</p>
+                            <p data-translatable>Patient Intake</p>
                         </div>
                         <div class="card template-card" onclick="loadTemplate('health2')">
                             <div class="template-preview healthcare-bg">
                                 <i class="fas fa-procedures"></i>
                             </div>
-                            <p>Medical Release</p>
+                            <p data-translatable>Medical Release</p>
                         </div>
                     </div>
                     
                     <!-- Personal Templates -->
-                    <h3>Personal</h3>
+                    <h3 data-translatable>Personal</h3>
                     <div class="templates-grid" data-category="personal">
                         <div class="card template-card" onclick="loadTemplate('personal1')">
                             <div class="template-preview personal-bg">
                                 <i class="fas fa-home"></i>
                             </div>
-                            <p>Lease Agreement</p>
+                            <p data-translatable>Lease Agreement</p>
                         </div>
                         <div class="card template-card" onclick="loadTemplate('personal2')">
                             <div class="template-preview personal-bg">
                                 <i class="fas fa-car"></i>
                             </div>
-                            <p>Vehicle Sale</p>
+                            <p data-translatable>Vehicle Sale</p>
                         </div>
                     </div>
                 </div>
@@ -721,7 +782,7 @@
                 <!-- Draft Forms Section -->
                 <div class="section">
                     <div class="section-header">
-                        <h2><i class="fas fa-edit"></i> Draft Forms</h2>
+                        <h2><i class="fas fa-edit"></i> <span data-translatable>Draft Forms</span></h2>
                     </div>
                     <div id="draftsList">
                         <!-- Draft forms will be loaded here -->
@@ -731,7 +792,7 @@
                 <!-- Filled Forms Section -->
                 <div class="section">
                     <div class="section-header">
-                        <h2><i class="fas fa-file-contract"></i> Filled Forms</h2>
+                        <h2><i class="fas fa-file-contract"></i> <span data-translatable>Filled Forms</span></h2>
                     </div>
                     <div id="filledFormsList">
                         <!-- Filled forms will be loaded here -->
@@ -741,6 +802,15 @@
         </div>
     </div>
 
+    <script src="/static/js/bhashini-translator.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bhashiniTranslator = new BhashiniTranslator();
+            document.getElementById('translateButton').addEventListener('click', () => {
+                bhashiniTranslator.translatePage();
+            });
+        });
+    </script>
     <script>
         // DOM Elements
         const sidebar = document.getElementById('sidebar');

@@ -4,3 +4,5 @@ gunicorn
 werkzeug
 flask-login
 pdfkit
+requests>=2.25.0
+urllib3>=1.26.0

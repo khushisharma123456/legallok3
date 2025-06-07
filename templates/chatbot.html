@@ -453,6 +453,40 @@
             background: var(--primary-color);
         }
 
+        /* Language Selector Styles */
+        .language-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        #languageSelect {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        #translateButton {
+            padding: 0.25rem 0.75rem;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #translateButton:hover {
+            background-color: var(--primary-color);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
@@ -528,13 +562,31 @@
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="logo">
+            <a href="/" class="logo">
                 <i class="fas fa-balance-scale"></i>
-                <span>Legal Lok</span>
-            </div>
+                <span data-translatable>Legal Lok</span>
+            </a>
         </div>
         
         <div class="top-nav-right">
+            <div class="language-container">
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="mr">मराठी</option>
+                    <option value="gu">ગુજરાતી</option>
+                    <option value="pa">ਪੰਜਾਬੀ</option>
+                </select>
+                <button id="translateButton">
+                    <i class="fas fa-language"></i>
+                    <span data-translatable>Translate</span>
+                </button>
+            </div>
             <div class="user-profile">
                 <div class="user-avatar" tabindex="0">
                     <i class="fas fa-user"></i>
@@ -551,85 +603,80 @@
     <!-- Main Content Area -->
     <div class="content-area">
         <!-- Side Navigation -->
-        <div class="sidebar">
-            <div class="sidebar-item">
+        <div class="sidebar">            <div class="sidebar-item">
                 <i class="fas fa-home"></i>
-                <a href="/dashboard"><span>Dashboard</span></a>
+                <a href="/dashboard"><span data-translatable>Dashboard</span></a>
             </div>
             
             <div class="sidebar-item active">
                 <i class="fas fa-robot"></i>
-                <a href="/chatbot"><span>Legal Chatbot</span></a>
+                <a href="/chatbot"><span data-translatable>Legal Chatbot</span></a>
             </div>
             
             <div class="sidebar-item">
                 <i class="fas fa-file-alt"></i>
-                <a href="/form"><span>Forms</span></a>
+                <a href="/form"><span data-translatable>Forms</span></a>
             </div>
             
             <div class="sidebar-item">
                 <i class="fas fa-users"></i>
-                <a href="/community"><span>Community Forum</span></a>
+                <a href="/community"><span data-translatable>Community Forum</span></a>
             </div>
             
             <div class="sidebar-item">
                 <i class="fas fa-gavel"></i>
-                <a href="{{ url_for('filled_forms') }}"><span>Petitions</span></a>
+                <a href="{{ url_for('filled_forms') }}"><span data-translatable>Petitions</span></a>
             </div>
             
             <div class="sidebar-item">
                 <i class="fas fa-bell"></i>
-                <a href="#"><span>Notifications</span></a>
+                <a href="#"><span data-translatable>Notifications</span></a>
             </div>
             
             <div class="sidebar-item">
                 <i class="fas fa-cog"></i>
-                <a href="#"><span>Settings</span></a>
+                <a href="#"><span data-translatable>Settings</span></a>
             </div>
         </div>
         
         <!-- Main Content -->
         <div class="main-content">
-            <div class="chatbot-container">
-                <div class="chatbot-header">
-                    <h1 class="chatbot-title">Legal Assistant</h1>
-                    <p class="chatbot-subtitle">Your AI-powered legal guidance</p>
+            <div class="chatbot-container">                <div class="chatbot-header">
+                    <h1 class="chatbot-title" data-translatable>Legal Assistant</h1>
+                    <p class="chatbot-subtitle" data-translatable>Your AI-powered legal guidance</p>
                 </div>
                 
                 <div class="chatbot-disclaimer">
-                    <strong><i class="fas fa-exclamation-circle"></i> Disclaimer:</strong> This AI assistant provides general legal information, not professional advice. For complex issues, consult a qualified lawyer.
+                    <strong><i class="fas fa-exclamation-circle"></i> <span data-translatable>Disclaimer:</span></strong> <span data-translatable>This AI assistant provides general legal information, not professional advice. For complex issues, consult a qualified lawyer.</span>
                 </div>
                 
                 <div class="chat-messages" id="chatMessages">
-                    <!-- Initial welcome message -->
-                    <div class="message bot-message">
+                    <!-- Initial welcome message -->                    <div class="message bot-message">
                         <div class="message-content">
-                            <strong>Hello! I'm your Legal Lok assistant.</strong><br><br>
-                            I can help you with legal information about:
+                            <strong data-translatable>Hello! I'm your Legal Lok assistant.</strong><br><br>
+                            <span data-translatable>I can help you with legal information about:</span>
                             <ul style="margin-top: 8px; margin-left: 20px;">
-                                <li>Property and real estate laws</li>
-                                <li>Family and marriage laws</li>
-                                <li>Business and employment regulations</li>
-                                <li>Criminal and civil procedures</li>
-                                <li>Consumer rights and more</li>
+                                <li data-translatable>Property and real estate laws</li>
+                                <li data-translatable>Family and marriage laws</li>
+                                <li data-translatable>Business and employment regulations</li>
+                                <li data-translatable>Criminal and civil procedures</li>
+                                <li data-translatable>Consumer rights and more</li>
                             </ul>
                             <br>
-                            How can I assist you today?
+                            <span data-translatable>How can I assist you today?</span>
                         </div>
                         <div class="message-time">Just now</div>
                     </div>
-                    
-                    <!-- Suggested questions will appear here -->
+                      <!-- Suggested questions will appear here -->
                     <div class="suggested-questions" id="suggestedQuestions">
-                        <div class="suggested-question">How to file for divorce in India?</div>
-                        <div class="suggested-question">Documents needed for property registration</div>
-                        <div class="suggested-question">Tenant rights under Indian law</div>
-                        <div class="suggested-question">How to draft a legal will?</div>
+                        <div class="suggested-question" data-translatable>How to file for divorce in India?</div>
+                        <div class="suggested-question" data-translatable>Documents needed for property registration</div>
+                        <div class="suggested-question" data-translatable>Tenant rights under Indian law</div>
+                        <div class="suggested-question" data-translatable>How to draft a legal will?</div>
                     </div>
                 </div>
-                
-                <div class="chat-input-container">
-                    <textarea class="chat-input" id="userInput" placeholder="Type your legal question here..." rows="1"></textarea>
+                  <div class="chat-input-container">
+                    <textarea class="chat-input" id="userInput" placeholder="Type your legal question here..." rows="1" data-translatable-placeholder="Type your legal question here..."></textarea>
                     <button class="send-btn" id="sendButton">
                         <i class="fas fa-paper-plane"></i>
                     </button>
@@ -638,6 +685,15 @@
         </div>
     </div>
 
+    <script src="/static/js/bhashini-translator.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bhashiniTranslator = new BhashiniTranslator();
+            document.getElementById('translateButton').addEventListener('click', () => {
+                bhashiniTranslator.translatePage();
+            });
+        });
+    </script>
     <script>
         // DOM Elements
         const chatMessages = document.getElementById('chatMessages');
