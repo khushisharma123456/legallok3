@@ -2,3 +2,5 @@ Flask
 Flask-SQLAlchemy
 gunicorn
 werkzeug
+flask-login
+pdfkit
