@@ -1,0 +1,64 @@
+{
+    "employment_agreement": {
+        "document_title": "EMPLOYMENT AGREEMENT",
+        "document_type": "employment",
+        "sections": {
+            "header": {
+                "title": "EMPLOYMENT AGREEMENT",
+                "date_field": "document_date"
+            },
+            "parties": {
+                "party1": {
+                    "title": "Employer",
+                    "fields": {
+                        "name": "company_name",
+                        "address": "company_address",
+                        "reference": "Employer"
+                    }
+                },
+                "party2": {
+                    "title": "Employee",
+                    "fields": {
+                        "name": "employee_name",
+                        "address": "employee_address",
+                        "reference": "Employee"
+                    }
+                }
+            },
+            "terms": {
+                "job_title": {
+                    "label": "Job Title",
+                    "type": "text"
+                },
+                "monthly_salary": {
+                    "label": "Monthly Salary",
+                    "type": "number"
+                },
+                "probation_period": {
+                    "label": "Probation Period",
+                    "type": "text"
+                },
+                "termination_notice": {
+                    "label": "Termination Notice",
+                    "type": "text"
+                }
+            },
+            "clauses": {
+                "confidentiality": {
+                    "label": "Confidentiality",
+                    "content": "Employee shall not disclose any proprietary information..."
+                }
+            },
+            "signatures": {
+                "party1": {
+                    "label": "Employer Signature",
+                    "date_field": "employer_signature_date"
+                },
+                "party2": {
+                    "label": "Employee Signature",
+                    "date_field": "employee_signature_date"
+                }
+            }
+        }
+    }
+} 

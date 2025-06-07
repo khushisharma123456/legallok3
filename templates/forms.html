@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Forms | Legal Lok</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-brown: #5a3921;
+            --secondary-brown: #8b4513;
+            --accent-brown: #d2b48c;
+            --light-brown: #f5f5f5;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            background-color: var(--primary-brown);
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--light-brown);
+            color: var(--primary-brown);
+            font-weight: 600;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-brown);
+            border-color: var(--secondary-brown);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-brown);
+            border-color: var(--primary-brown);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-brown);
+            border-color: var(--primary-brown);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-brown);
+            border-color: var(--primary-brown);
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-brown);
+            box-shadow: 0 0 0 0.25rem rgba(210, 180, 140, 0.25);
+        }
+        
+        .form-label {
+            color: var(--primary-brown);
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--accent-brown);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            color: var(--primary-brown);
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-create {
+            background-color: var(--secondary-brown);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-create:hover {
+            background-color: var(--primary-brown);
+            color: white;
+        }
+        
+        .modal-header {
+            background-color: var(--light-brown);
+            color: var(--primary-brown);
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-footer {
+            border-top: none;
+        }
+        
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-field label {
+            font-weight: 500;
+            color: var(--primary-brown);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-field-value {
+            background-color: var(--light-brown);
+            padding: 0.75rem;
+            border-radius: 5px;
+            border: 1px solid var(--accent-brown);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: var(--primary-brown);
+            color: white;
+            padding-top: 20px;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-header h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--secondary-brown);
+            color: white;
+            border-left: 3px solid var(--accent-brown);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .toggle-sidebar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: var(--primary-brown);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo"></div>
+            <span class="brand-name">Legal Lok</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">Home</a>
+        </div>
+    </header>
+    
+    <div class="main-content">
+        <h1 class="page-title">Legal Forms</h1>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search for forms...">
+        </div>
+        
+        <div class="category-filter" id="categoryFilter">
+            <!-- Categories will be dynamically added here -->
+        </div>
+        
+        <div class="forms-grid" id="formsGrid">
+            <!-- Form cards will be dynamically added here -->
+        </div>
+    </div>
+    
+    <script>
+        // Fetch the forms data
+        async function fetchForms() {
+            try {
+                const response = await fetch('../data/legal_forms.json');
+                const data = await response.json();
+                return data.forms;
+            } catch (error) {
+                console.error('Error fetching forms:', error);
+                return [];
+            }
+        }
+        
+        // Render form cards
+        function renderFormCards(forms) {
+            const formsGrid = document.getElementById('formsGrid');
+            formsGrid.innerHTML = '';
+            
+            if (forms.length === 0) {
+                formsGrid.innerHTML = '<div class="no-results">No forms found matching your criteria.</div>';
+                return;
+            }
+            
+            forms.forEach(form => {
+                const formCard = document.createElement('div');
+                formCard.className = 'form-card';
+                
+                formCard.innerHTML = `
+                    <div class="form-icon">
+                        <i class="fas ${form.icon}"></i>
+                    </div>
+                    <div class="form-content">
+                        <h3 class="form-title">${form.title}</h3>
+                        <div class="form-category">${form.category}</div>
+                        <p class="form-description">${form.description}</p>
+                        <a href="form.html?id=${form.id}" class="form-btn">Fill Form</a>
+                    </div>
+                `;
+                
+                formsGrid.appendChild(formCard);
+            });
+        }
+        
+        // Extract unique categories
+        function getUniqueCategories(forms) {
+            const categories = new Set();
+            forms.forEach(form => categories.add(form.category));
+            return Array.from(categories);
+        }
+        
+        // Render category filter buttons
+        function renderCategoryFilter(categories) {
+            const categoryFilter = document.getElementById('categoryFilter');
+            categoryFilter.innerHTML = '';
+            
+            // Add "All" category
+            const allBtn = document.createElement('button');
+            allBtn.className = 'category-btn active';
+            allBtn.textContent = 'All';
+            allBtn.dataset.category = 'all';
+            categoryFilter.appendChild(allBtn);
+            
+            // Add other categories
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = category;
+                btn.dataset.category = category;
+                categoryFilter.appendChild(btn);
+            });
+        }
+        
+        // Filter forms based on search and category
+        function filterForms(forms, searchTerm, category) {
+            return forms.filter(form => {
+                const matchesSearch = form.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                     form.description.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                const matchesCategory = category === 'all' || form.category === category;
+                
+                return matchesSearch && matchesCategory;
+            });
+        }
+        
+        // Initialize the page
+        async function initPage() {
+            const forms = await fetchForms();
+            const categories = getUniqueCategories(forms);
+            
+            renderCategoryFilter(categories);
+            renderFormCards(forms);
+            
+            // Set up search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value;
+                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+                const filteredForms = filterForms(forms, searchTerm, activeCategory);
+                renderFormCards(filteredForms);
+            });
+            
+            // Set up category filter functionality
+            const categoryFilter = document.getElementById('categoryFilter');
+            categoryFilter.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    // Update active button
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    
+                    // Filter forms
+                    const searchTerm = searchInput.value;
+                    const category = e.target.dataset.category;
+                    const filteredForms = filterForms(forms, searchTerm, category);
+                    renderFormCards(filteredForms);
+                }
+            });
+        }
+        
+        // Start the application
+        initPage();
+    </script>
+</body>
+</html> 
