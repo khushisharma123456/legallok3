@@ -7,39 +7,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-brown: #5a3921;
-            --secondary-brown: #8b4513;
-            --accent-brown: #d2b48c;
-            --light-brown: #f5f5f5;
+            --primary-color: #5D4037; /* Dark brown */
+            --secondary-color: #8D6E63; /* Medium brown */
+            --accent-color: #D7CCC8; /* Light brown */
+            --dark-color: #3E2723; /* Very dark brown */
+            --light-color: #EFEBE9; /* Very light brown */
+            --text-color: #333;
+            --text-light: #ffffff;
+            --border-color: #BCAAA4;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+            --border-radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
         
+        /* Top Navigation */
         .top-nav {
-            background-color: var(--primary-brown);
-            color: white;
+            background-color: var(--dark-color);
+            color: var(--text-light);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         .logo {
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: white;
             font-size: 1.5rem;
             font-weight: 600;
         }
         
         .logo i {
-            color: var(--accent-brown);
+            color: var(--accent-color);
         }
         
         .user-profile {
@@ -49,52 +69,75 @@
         }
         
         .user-avatar {
-            background-color: var(--secondary-brown);
+            background-color: var(--secondary-color);
             width: 40px;
             height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--text-light);
         }
         
         .logout-btn {
-            background-color: var(--secondary-brown);
-            color: white;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
             border: none;
             padding: 0.5rem 1rem;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            font-weight: 500;
         }
         
         .logout-btn:hover {
-            background-color: var(--primary-brown);
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
         }
         
+        /* Main Content Layout */
         .content-area {
             display: flex;
             min-height: calc(100vh - 70px);
         }
         
+        /* Sidebar */
         .sidebar {
             width: 250px;
-            background-color: var(--primary-brown);
-            color: white;
-            padding: 2rem 0;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 1.5rem 0;
+            transition: var(--transition);
         }
         
         .sidebar-item {
-            padding: 1rem 2rem;
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            margin: 0.5rem 0;
+            border-left: 4px solid transparent;
         }
         
-        .sidebar-item:hover, .sidebar-item.active {
-            background-color: var(--secondary-brown);
+        .sidebar-item:hover {
+            background-color: var(--secondary-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .sidebar-item.active {
+            background-color: var(--secondary-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .sidebar-item a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
         }
         
         .sidebar-item i {
@@ -102,9 +145,11 @@
             text-align: center;
         }
         
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 2rem;
+            background-color: var(--light-color);
         }
         
         .welcome-section {
@@ -112,29 +157,74 @@
         }
         
         .welcome-section h1 {
-            color: var(--primary-brown);
+            color: var(--dark-color);
             font-size: 2rem;
-            margin: 0;
+            margin-bottom: 0.5rem;
         }
         
-        .profile-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .welcome-section p {
+            color: var(--secondary-color);
+        }
+        
+        /* Cards */
+        .card {
+            background-color: var(--text-light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             margin-bottom: 2rem;
             overflow: hidden;
+            transition: var(--transition);
         }
         
-        .profile-header {
-            background-color: var(--light-brown);
-            padding: 2rem;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-color);
             display: flex;
             align-items: center;
-            gap: 2rem;
+            justify-content: space-between;
+        }
+        
+        .card-header h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-header i {
+            color: var(--secondary-color);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Profile Card */
+        .profile-card .card-header {
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            border: none;
+        }
+        
+        .profile-card .card-header h2 {
+            color: var(--text-light);
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .profile-pic {
-            background-color: var(--secondary-brown);
+            background-color: var(--secondary-color);
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -142,97 +232,82 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            color: white;
-        }
-        
-        .profile-info h2 {
-            color: var(--primary-brown);
-            margin: 0 0 0.5rem 0;
+            color: var(--text-light);
         }
         
         .profile-details {
-            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
         
         .detail-item {
-            margin-bottom: 1.5rem;
+            background-color: var(--light-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
         }
         
         .detail-item h3 {
-            color: var(--primary-brown);
-            margin: 0 0 0.5rem 0;
-            font-size: 1rem;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .detail-item p {
-            color: #666;
-            margin: 0;
+            color: var(--text-color);
+            font-weight: 500;
         }
         
-        .notifications {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-        
-        .notifications h2 {
-            color: var(--primary-brown);
-            margin: 0 0 1.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
+        /* Notifications */
         .notification-item {
             display: flex;
             gap: 1rem;
             padding: 1rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-item:hover {
+            background-color: var(--light-color);
         }
         
         .notification-icon {
-            background-color: var(--light-brown);
+            background-color: var(--light-color);
             width: 40px;
             height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-brown);
+            color: var(--secondary-color);
+            flex-shrink: 0;
         }
         
         .notification-content h4 {
-            color: var(--primary-brown);
-            margin: 0 0 0.5rem 0;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
         }
         
         .notification-content p {
-            color: #666;
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .notification-time {
-            color: #999;
+            color: var(--secondary-color);
+            margin-bottom: 0.25rem;
             font-size: 0.9rem;
         }
         
-        .popular-articles {
-            margin-top: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+        .notification-time {
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
         
-        .popular-articles h2 {
-            color: var(--primary-brown);
-            margin: 0 0 1.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
+        /* Articles */
         .articles-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -240,65 +315,131 @@
         }
         
         .article-card {
-            background-color: var(--light-brown);
-            border-radius: 10px;
-            padding: 1.5rem;
-            transition: transform 0.3s;
+            background-color: var(--text-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
         }
         
         .article-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
         
-        .article-card h3 {
-            color: var(--primary-brown);
-            margin: 0 0 1rem 0;
+        .article-image {
+            height: 150px;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 2rem;
         }
         
-        .article-card p {
-            color: #666;
-            margin: 0 0 1rem 0;
+        .article-content {
+            padding: 1.5rem;
         }
         
-        .article-meta {
-            color: #999;
+        .article-content h3 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .article-content p {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
             font-size: 0.9rem;
         }
         
-        .load-more {
-            background-color: var(--secondary-brown);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 5px;
-            margin-top: 1.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary-color);
+            font-size: 0.8rem;
         }
         
-        .load-more:hover {
-            background-color: var(--primary-brown);
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Loading State */
+        .loading-articles {
+            padding: 2rem;
+            text-align: center;
+            color: var(--secondary-color);
+            grid-column: 1 / -1;
+        }
+        
+        .fa-spinner {
+            margin-right: 0.5rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .sidebar-item {
+                padding: 0.75rem 1rem;
+            }
+            
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
-        <div class="top-nav-left">
-            <div class="logo">
-                <i class="fas fa-balance-scale"></i>
-                <span>Legal Lok</span>
-            </div>
+        <div class="logo">
+            <i class="fas fa-balance-scale"></i>
+            <span>Legal Lok</span>
         </div>
         
-        <div class="top-nav-right">
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="user-name">{{ user.full_name }}</div>
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
             </div>
-            <a href = "/logout"><button class="logout-btn">Logout</button></a>
+            <span class="user-name">{{ user.full_name }}</span>
+            <a href="/logout"><button class="logout-btn">Logout</button></a>
         </div>
     </nav>
     
@@ -307,51 +448,52 @@
         <!-- Side Navigation -->
         <div class="sidebar">
             <div class="sidebar-item active">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </div>
-            
-            <div class="sidebar-item">
-                
-                <i class="fas fa-robot"></i>
-                <a href = "/chatbot">
-                <span>Legal Chatbot</span>
-                </a>
-            </div>
-            
-            
-            <div class="sidebar-item">
-                
-                <i class="fas fa-file-alt"></i>
-                <a href = "/form">
-                <span>Forms</span>
+                <a href="/dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
-                
-                <i class="fas fa-users"></i>
-                <a href = "/community">
-                <span>Community Forum</span>
+                <a href="/chatbot">
+                    <i class="fas fa-robot"></i>
+                    <span>Legal Chatbot</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
-                
-                <i class="fas fa-gavel"></i>
+                <a href="/form">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Forms</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-item">
+                <a href="/community">
+                    <i class="fas fa-users"></i>
+                    <span>Community Forum</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-item">
                 <a href="{{ url_for('filled_forms') }}">
-                <span>Petitions</span>
+                    <i class="fas fa-gavel"></i>
+                    <span>Petitions</span>
                 </a>
             </div>
             
             <div class="sidebar-item">
-                <i class="fas fa-bell"></i>
-                <span>Notifications</span>
+                <a href="#">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
             </div>
             
             <div class="sidebar-item">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
+                <a href="#">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
             </div>
         </div>
         
@@ -359,107 +501,121 @@
         <div class="main-content">
             <!-- Welcome Section -->
             <div class="welcome-section">
-                <h1>Welcome, {{ user.full_name }}!</h1>
+                <h1>Welcome back, {{ user.full_name }}!</h1>
+                <p>Here's what's happening with your legal matters today.</p>
             </div>
             
             <!-- Profile Card -->
-            <div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-pic">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="profile-info">
-                        <h2>{{ user.full_name }}</h2>
-                        <p>Member since {{ user.created_at.strftime('%B %Y') if user.created_at else 'N/A' }}</p>
-                    </div>
+            <div class="card profile-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user"></i> My Profile</h2>
                 </div>
-                
-                <div class="profile-details">
-                    <div class="detail-item">
-                        <h3>Full Name</h3>
-                        <p>{{ user.full_name }}</p>
+                <div class="card-body">
+                    <div class="profile-info">
+                        <div class="profile-pic">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h2>{{ user.full_name }}</h2>
+                            <p>Member since {{ user.created_at.strftime('%B %Y') if user.created_at else 'N/A' }}</p>
+                        </div>
                     </div>
                     
-                    <div class="detail-item">
-                        <h3>Mobile Number</h3>
-                        <p>{{ user.phone }}</p>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <h3>Email Address</h3>
-                        <p>{{ user.email }}</p>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <h3>User ID</h3>
-                        <p>LL-{{ user.id + 2023 }}</p>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <h3>Full Name</h3>
+                            <p>{{ user.full_name }}</p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <h3>Mobile Number</h3>
+                            <p>{{ user.phone }}</p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <h3>Email Address</h3>
+                            <p>{{ user.email }}</p>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <h3>User ID</h3>
+                            <p>LL-{{ user.id + 2023 }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            
             
             <!-- Notifications Section -->
-            <div class="notifications">
-                <h2><i class="fas fa-bell"></i> Recent Activities</h2>
-                
-                <div class="notification-item">
-                    <div class="notification-icon">
-                        <i class="fas fa-file-signature"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h4>New Petition Filed</h4>
-                        <p>Your petition regarding property dispute has been successfully submitted.</p>
-                        <div class="notification-time">2 hours ago</div>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-bell"></i> Recent Activities</h2>
                 </div>
-                
-                <div class="notification-item">
-                    <div class="notification-icon">
-                        <i class="fas fa-comments"></i>
+                <div class="card-body">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>New Petition Filed</h4>
+                            <p>Your petition regarding property dispute has been successfully submitted.</p>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
                     </div>
-                    <div class="notification-content">
-                        <h4>Community Response</h4>
-                        <p>You have 3 new responses on your forum post about tenant rights.</p>
-                        <div class="notification-time">5 hours ago</div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Community Response</h4>
+                            <p>You have 3 new responses on your forum post about tenant rights.</p>
+                            <div class="notification-time">5 hours ago</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="notification-item">
-                    <div class="notification-icon">
-                        <i class="fas fa-user-tie"></i>
+                    
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Lawyer Connected</h4>
+                            <p>Advocate Priya Sharma has accepted your consultation request.</p>
+                            <div class="notification-time">1 day ago</div>
+                        </div>
                     </div>
-                    <div class="notification-content">
-                        <h4>Lawyer Connected</h4>
-                        <p>Advocate Priya Sharma has accepted your consultation request.</p>
-                        <div class="notification-time">1 day ago</div>
-                    </div>
-                </div>
-                
-                <div class="notification-item">
-                    <div class="notification-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="notification-content">
-                        <h4>Form Approved</h4>
-                        <p>Your RTI application form has been approved by the reviewing officer.</p>
-                        <div class="notification-time">2 days ago</div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Form Approved</h4>
+                            <p>Your RTI application form has been approved by the reviewing officer.</p>
+                            <div class="notification-time">2 days ago</div>
+                        </div>
                     </div>
                 </div>
             </div>
+            
             <!-- Popular Articles Section -->
-            <div class="popular-articles">
-                <h2><i class="fas fa-newspaper"></i> Popular Legal News</h2>
-              <div id="articles-container" class="articles-grid">
-                  <div class="loading-articles">
-                     <i class="fas fa-spinner fa-spin"></i> Loading articles...
-                 </div>
-              </div>
-             <button id="load-more" class="load-more" style="display: none;">Load More Articles</button>
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-newspaper"></i> Popular Legal News</h2>
+                </div>
+                <div class="card-body">
+                    <div id="articles-container" class="articles-grid">
+                        <div class="loading-articles">
+                            <i class="fas fa-spinner fa-spin"></i> Loading articles...
+                        </div>
+                    </div>
+                    <button id="load-more" class="btn btn-block" style="display: none; margin-top: 1.5rem;">Load More Articles</button>
+                </div>
             </div>
+        </div>
     </div>
 
     <script>
-        // Simple JavaScript for sidebar navigation
+        // Sidebar navigation active state
         document.querySelectorAll('.sidebar-item').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
@@ -467,16 +623,82 @@
             });
         });
         
-        // Logout functionality
-        document.querySelector('.logout-btn').addEventListener('click', function() {
-            if(confirm('Are you sure you want to logout?')) {
-                // In a real app, this would redirect to logout endpoint
-                alert('You have been logged out successfully');
-                // window.location.href = '/logout';
-            }
-        });
+        // Simulate loading articles (in a real app, this would be an API call)
+        setTimeout(() => {
+            const articlesContainer = document.getElementById('articles-container');
+            articlesContainer.innerHTML = '';
+            
+            const sampleArticles = [
+                {
+                    title: "New Supreme Court Ruling on Property Rights",
+                    excerpt: "The Supreme Court has issued a landmark judgment that clarifies inheritance laws for ancestral property.",
+                    category: "Property Law",
+                    date: "May 15, 2023"
+                },
+                {
+                    title: "Changes to Labor Laws Coming in 2024",
+                    excerpt: "The government has proposed significant changes to labor regulations that will affect contract workers.",
+                    category: "Labor Law",
+                    date: "May 10, 2023"
+                },
+                {
+                    title: "How to File an RTI Application Online",
+                    excerpt: "Step-by-step guide to filing Right to Information applications through the new portal.",
+                    category: "Public Law",
+                    date: "May 5, 2023"
+                }
+            ];
+            
+            sampleArticles.forEach(article => {
+                const articleCard = document.createElement('div');
+                articleCard.className = 'article-card';
+                articleCard.innerHTML = `
+                    <div class="article-image">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="article-content">
+                        <h3>${article.title}</h3>
+                        <p>${article.excerpt}</p>
+                        <div class="article-meta">
+                            <span>${article.category}</span>
+                            <span>${article.date}</span>
+                        </div>
+                    </div>
+                `;
+                articlesContainer.appendChild(articleCard);
+            });
+            
+            document.getElementById('load-more').style.display = 'block';
+        }, 1500);
         
-        // User profile dropdown functionality would go here
+        // Load more articles functionality
+        document.getElementById('load-more')?.addEventListener('click', function() {
+            this.textContent = 'Loading...';
+            this.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const additionalArticle = document.createElement('div');
+                additionalArticle.className = 'article-card';
+                additionalArticle.innerHTML = `
+                    <div class="article-image" style="background-color: var(--primary-color);">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <div class="article-content">
+                        <h3>Recent Changes to Consumer Protection Laws</h3>
+                        <p>New amendments give consumers stronger rights against unfair trade practices.</p>
+                        <div class="article-meta">
+                            <span>Consumer Law</span>
+                            <span>April 28, 2023</span>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('articles-container').appendChild(additionalArticle);
+                
+                this.textContent = 'Load More Articles';
+                this.disabled = false;
+            }, 1000);
+        });
     </script>
     <script src="static/dashboard.js"></script>
 </body>
