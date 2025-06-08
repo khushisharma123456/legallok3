@@ -8,8 +8,7 @@ class BhashiniTranslator {
 
     async translate(text, targetLanguage) {
         if (!text || !text.trim()) return text;
-        
-        // Skip translation if already in target language
+
         if (this.isInTargetLanguage(text, targetLanguage)) {
             return text;
         }
@@ -22,7 +21,7 @@ class BhashiniTranslator {
         try {
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     input: {
                         source: text,
@@ -36,14 +35,16 @@ class BhashiniTranslator {
 
             const data = await response.json();
             let translatedText = data?.target || data?.output?.[0]?.target || text;
-            
-            // Verify the translation actually changed
+
             if (translatedText === text) {
                 console.warn('API returned same text:', text);
-                translatedText = text; // Fallback to original
+                translatedText = text;
             }
-            
+
             this.translationCache.set(cacheKey, translatedText);
+
+            if (this.debugMode) console.log(`Translated "${text}" → "${translatedText}"`);
+
             return translatedText;
         } catch (error) {
             console.error('Translation error:', error);
@@ -52,8 +53,7 @@ class BhashiniTranslator {
     }
 
     isInTargetLanguage(text, targetLanguage) {
-        // Simple check for non-English text
-        if (targetLanguage !== 'en' && !/^[a-zA-Z0-9\s.,!?'"@#$%^&*()_+-=]*$/.test(text)) {
+        if (targetLanguage !== 'en' && !/^[a-zA-Z0-9\s.,!?'"@#$%^&*()_+\-=/\\]*$/.test(text)) {
             return true;
         }
         return false;
@@ -62,23 +62,15 @@ class BhashiniTranslator {
     async translatePage() {
         const targetLanguage = document.getElementById('languageSelect').value;
         const translateButton = document.getElementById('translateButton');
-        
+
         translateButton.disabled = true;
         translateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating...';
 
         try {
-            // 1. First handle marked elements
             await this.translateMarkedElements(targetLanguage);
-            
-            // 2. Then handle all other text nodes
             await this.translateTextNodes(targetLanguage);
-            
-            // 3. Handle attributes
             await this.translateAttributes(targetLanguage);
-            
-            // 4. Set up observer for dynamic content
             this.setupObserver(targetLanguage);
-            
         } finally {
             translateButton.disabled = false;
             translateButton.innerHTML = '<i class="fas fa-language"></i> Translate';
@@ -89,10 +81,10 @@ class BhashiniTranslator {
         const elements = document.querySelectorAll('[data-translatable]');
         for (const el of elements) {
             if (!el.dataset.originalText) {
-                el.dataset.originalText = el.textContent;
+                el.dataset.originalText = el.innerText;
             }
             const translated = await this.translate(el.dataset.originalText, targetLanguage);
-            el.textContent = translated;
+            el.innerText = translated;
         }
     }
 
@@ -102,10 +94,11 @@ class BhashiniTranslator {
             NodeFilter.SHOW_TEXT,
             {
                 acceptNode: (node) => {
-                    if (node.parentNode.nodeName === 'SCRIPT' || 
+                    if (
+                        node.parentNode.nodeName === 'SCRIPT' ||
                         node.parentNode.nodeName === 'STYLE' ||
-                        !node.textContent.trim() ||
-                        node.parentNode.hasAttribute('data-translatable')) {
+                        !node.textContent.trim()
+                    ) {
                         return NodeFilter.FILTER_REJECT;
                     }
                     return NodeFilter.FILTER_ACCEPT;
@@ -118,13 +111,13 @@ class BhashiniTranslator {
 
         for (const node of nodes) {
             if (!node.originalText) node.originalText = node.textContent;
-            node.textContent = await this.translate(node.textContent.trim(), targetLanguage);
+            node.textContent = await this.translate(node.originalText.trim(), targetLanguage);
         }
     }
 
-    async translateAttributes(targetLanguage) {
+    async translateAttributes(targetLanguage, root = document.body) {
         const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
-        const elements = document.querySelectorAll('*');
+        const elements = root.querySelectorAll('*');
 
         for (const el of elements) {
             for (const attr of attributes) {
@@ -140,7 +133,7 @@ class BhashiniTranslator {
 
     setupObserver(targetLanguage) {
         if (this.observer) this.observer.disconnect();
-        
+
         this.observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
@@ -153,53 +146,38 @@ class BhashiniTranslator {
 
         this.observer.observe(document.body, {
             childList: true,
-            subtree: true,
-            attributes: false,
-            characterData: false
+            subtree: true
         });
     }
 
     async translateElement(element, targetLanguage) {
-        // Handle marked elements first
         const markedElements = element.querySelectorAll('[data-translatable]');
         for (const el of markedElements) {
             if (!el.dataset.originalText) {
-                el.dataset.originalText = el.textContent;
+                el.dataset.originalText = el.innerText;
             }
-            el.textContent = await this.translate(el.dataset.originalText, targetLanguage);
+            el.innerText = await this.translate(el.dataset.originalText, targetLanguage);
         }
-        
-        // Then handle text nodes
+
         await this.translateTextNodes(targetLanguage, element);
-        
-        // Then handle attributes
         await this.translateAttributes(targetLanguage, element);
     }
 
     resetOriginalContent() {
-        // Reset marked elements
         document.querySelectorAll('[data-translatable]').forEach(el => {
             if (el.dataset.originalText) {
-                el.textContent = el.dataset.originalText;
+                el.innerText = el.dataset.originalText;
             }
         });
-        
-        // Reset text nodes
-        const walker = document.createTreeWalker(
-            document.body,
-            NodeFilter.SHOW_TEXT,
-            null,
-            false
-        );
-        
+
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
         while (walker.nextNode()) {
             const node = walker.currentNode;
             if (node.originalText) {
                 node.textContent = node.originalText;
             }
         }
-        
-        // Reset attributes
+
         const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
         document.querySelectorAll('*').forEach(el => {
             for (const attr of attributes) {
@@ -209,7 +187,7 @@ class BhashiniTranslator {
                 }
             }
         });
-        
+
         if (this.observer) {
             this.observer.disconnect();
             this.observer = null;
@@ -217,7 +195,6 @@ class BhashiniTranslator {
     }
 }
 
-// Initialize and set up event listener
 document.addEventListener('DOMContentLoaded', () => {
     const translator = new BhashiniTranslator();
     document.getElementById('translateButton').addEventListener('click', () => {
