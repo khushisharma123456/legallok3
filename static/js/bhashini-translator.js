@@ -4,6 +4,7 @@ class BhashiniTranslator {
         this.translationCache = new Map();
         this.observer = null;
         this.isTranslating = false;
+        this.translationQueue = [];
     }
 
     async translate(text, targetLanguage) {
@@ -55,16 +56,24 @@ class BhashiniTranslator {
             // Start observing DOM changes
             this.startObservation(targetLanguage);
 
-            // Initial translation of all content
-            await this.translateEntireDOM(targetLanguage);
-
             // Create status indicator
-            const statusIndicator = this.createStatusIndicator('Translation in progress...');
-            
-            // Special handling for complex elements
-            await this.handleComplexElements(targetLanguage);
+            const statusIndicator = this.createStatusIndicator('Starting translation...');
 
-            // Update status to completed
+            // Get ALL elements with text content
+            const allElements = this.getAllTextElements();
+            
+            // Process in batches to avoid UI freeze
+            const batchSize = 10;
+            for (let i = 0; i < allElements.length; i += batchSize) {
+                const batch = allElements.slice(i, i + batchSize);
+                await this.processBatch(batch, targetLanguage);
+                
+                // Update status
+                statusIndicator.textContent = `Translating... (${Math.min(i + batchSize, allElements.length)}/${allElements.length})`;
+                await new Promise(resolve => setTimeout(resolve, 50)); // Small delay to keep UI responsive
+            }
+
+            // Final update
             statusIndicator.style.background = 'rgba(40,167,69,0.9)';
             statusIndicator.textContent = 'Translation completed!';
             setTimeout(() => statusIndicator.remove(), 2000);
@@ -78,6 +87,105 @@ class BhashiniTranslator {
             translateButton.disabled = false;
             translateButton.innerHTML = originalButtonContent;
             this.isTranslating = false;
+        }
+    }
+
+    getAllTextElements() {
+        // Get all elements that might contain text
+        const elements = Array.from(document.querySelectorAll('body *')).filter(el => {
+            // Skip script, style, and other non-content elements
+            if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'NOSCRIPT') {
+                return false;
+            }
+            
+            // Check if element has text content
+            return el.textContent.trim().length > 0 || 
+                   el.hasAttribute('placeholder') || 
+                   el.hasAttribute('title') || 
+                   el.hasAttribute('alt') || 
+                   el.hasAttribute('aria-label');
+        });
+        
+        // Also include all text nodes
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: (node) => {
+                    if (node.parentNode.nodeName === 'SCRIPT' || 
+                        node.parentNode.nodeName === 'STYLE' ||
+                        !node.textContent.trim()) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+        
+        const textNodes = [];
+        while (walker.nextNode()) textNodes.push(walker.currentNode);
+        
+        return [...elements, ...textNodes];
+    }
+
+    async processBatch(batch, targetLanguage) {
+        const promises = [];
+        
+        for (const element of batch) {
+            if (element.nodeType === Node.TEXT_NODE) {
+                promises.push(this.processTextNode(element, targetLanguage));
+            } else {
+                promises.push(this.processElement(element, targetLanguage));
+            }
+        }
+        
+        await Promise.all(promises);
+    }
+
+    async processTextNode(node, targetLanguage) {
+        if (!node.originalText) {
+            node.originalText = node.textContent;
+        }
+        node.textContent = await this.translate(node.textContent.trim(), targetLanguage);
+    }
+
+    async processElement(element, targetLanguage) {
+        // Handle text content
+        if (element.textContent.trim() && !element.dataset.originalText) {
+            element.dataset.originalText = element.textContent;
+            const translated = await this.translate(element.textContent.trim(), targetLanguage);
+            
+            // Preserve HTML structure if needed
+            if (element.children.length > 0) {
+                const textNodes = Array.from(element.childNodes).filter(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
+                if (textNodes.length > 0) {
+                    textNodes[0].textContent = translated;
+                    for (let i = 1; i < textNodes.length; i++) {
+                        textNodes[i].textContent = '';
+                    }
+                }
+            } else {
+                element.textContent = translated;
+            }
+        }
+        
+        // Handle attributes
+        const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
+        for (const attr of attributes) {
+            if (element.hasAttribute(attr)) {
+                const original = element.getAttribute(`data-original-${attr}`) || element.getAttribute(attr);
+                element.setAttribute(`data-original-${attr}`, original);
+                const translated = await this.translate(original, targetLanguage);
+                element.setAttribute(attr, translated);
+            }
+        }
+        
+        // Handle input values
+        if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.value) {
+            if (!element.dataset.originalValue) {
+                element.dataset.originalValue = element.value;
+            }
+            element.value = await this.translate(element.value, targetLanguage);
         }
     }
 
@@ -99,13 +207,17 @@ class BhashiniTranslator {
     startObservation(targetLanguage) {
         if (this.observer) this.observer.disconnect();
         
-        this.observer = new MutationObserver(async (mutations) => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        await this.translateElement(node, targetLanguage);
+        this.observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
+                        this.translationQueue.push({ node, targetLanguage });
                     }
-                }
+                });
+            });
+            
+            if (!this.isProcessingQueue) {
+                this.processQueue();
             }
         });
 
@@ -117,120 +229,27 @@ class BhashiniTranslator {
         });
     }
 
-    async translateEntireDOM(targetLanguage) {
-        // Translate all text nodes
-        await this.translateTextNodes(targetLanguage);
+    async processQueue() {
+        this.isProcessingQueue = true;
         
-        // Translate all attributes
-        await this.translateAttributes(targetLanguage);
-        
-        // Handle special cases
-        await this.handleSpecialCases(targetLanguage);
-    }
-
-    async translateTextNodes(targetLanguage, root = document.body) {
-        const walker = document.createTreeWalker(
-            root,
-            NodeFilter.SHOW_TEXT,
-            {
-                acceptNode: (node) => {
-                    if (node.parentNode.nodeName === 'SCRIPT' || 
-                        node.parentNode.nodeName === 'STYLE' ||
-                        node.parentNode.nodeName === 'NOSCRIPT' ||
-                        !node.textContent.trim()) {
-                        return NodeFilter.FILTER_REJECT;
-                    }
-                    return NodeFilter.FILTER_ACCEPT;
-                }
-            }
-        );
-
-        const nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
-
-        for (const node of nodes) {
-            if (!node.originalText) node.originalText = node.textContent;
-            node.textContent = await this.translate(node.textContent.trim(), targetLanguage);
-        }
-    }
-
-    async translateAttributes(targetLanguage, root = document) {
-        const attributes = ['title', 'placeholder', 'alt', 'aria-label'];
-        const elements = root.querySelectorAll('*');
-
-        for (const element of elements) {
-            for (const attr of attributes) {
-                if (element.hasAttribute(attr)) {
-                    const original = element.getAttribute(`data-original-${attr}`) || element.getAttribute(attr);
-                    element.setAttribute(`data-original-${attr}`, original);
-                    const translated = await this.translate(original, targetLanguage);
-                    element.setAttribute(attr, translated);
-                }
-            }
-        }
-    }
-
-    async handleSpecialCases(targetLanguage) {
-        // Handle elements with HTML content
-        const htmlElements = document.querySelectorAll('[data-translatable-html]');
-        for (const element of htmlElements) {
-            if (!element.dataset.originalHtml) {
-                element.dataset.originalHtml = element.innerHTML;
-            }
-            const translated = await this.translate(element.textContent.trim(), targetLanguage);
-            element.textContent = translated;
-        }
-
-        // Handle input values
-        const inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea');
-        for (const input of inputs) {
-            if (input.value && !input.dataset.originalValue) {
-                input.dataset.originalValue = input.value;
-                input.value = await this.translate(input.value, targetLanguage);
-            }
-        }
-    }
-
-    async handleComplexElements(targetLanguage) {
-        // Handle lists with complex structure
-        const listItems = document.querySelectorAll('li');
-        for (const item of listItems) {
-            if (!item.dataset.originalText) {
-                item.dataset.originalText = item.textContent;
-            }
-            item.textContent = await this.translate(item.textContent.trim(), targetLanguage);
-        }
-
-        // Handle buttons with icons and text
-        const buttons = document.querySelectorAll('button');
-        for (const button of buttons) {
-            if (button.textContent.trim() && !button.dataset.originalText) {
-                button.dataset.originalText = button.textContent;
-                const translated = await this.translate(button.textContent.trim(), targetLanguage);
-                // Preserve any HTML structure (like icons)
-                if (button.children.length > 0) {
-                    const textNodes = Array.from(button.childNodes).filter(n => n.nodeType === Node.TEXT_NODE);
-                    textNodes.forEach(n => {
-                        if (n.textContent.trim()) {
-                            n.textContent = translated;
-                        }
-                    });
+        while (this.translationQueue.length > 0) {
+            const { node, targetLanguage } = this.translationQueue.shift();
+            
+            try {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    await this.processTextNode(node, targetLanguage);
                 } else {
-                    button.textContent = translated;
+                    await this.processElement(node, targetLanguage);
                 }
+            } catch (error) {
+                console.error('Error processing node:', error);
             }
+            
+            // Small delay to keep UI responsive
+            await new Promise(resolve => setTimeout(resolve, 10));
         }
-    }
-
-    async translateElement(element, targetLanguage) {
-        // Translate text nodes in this element
-        await this.translateTextNodes(targetLanguage, element);
         
-        // Translate attributes in this element
-        await this.translateAttributes(targetLanguage, element);
-        
-        // Handle any complex cases in this element
-        await this.handleComplexElements(targetLanguage);
+        this.isProcessingQueue = false;
     }
 
     resetOriginalContent() {
@@ -249,8 +268,13 @@ class BhashiniTranslator {
             }
         }
 
+        // Reset elements
+        document.querySelectorAll('[data-original-text]').forEach(el => {
+            el.textContent = el.dataset.originalText;
+        });
+
         // Reset attributes
-        const attributes = ['title', 'placeholder', 'alt', 'aria-label'];
+        const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
         document.querySelectorAll('*').forEach(el => {
             for (const attr of attributes) {
                 const original = el.getAttribute(`data-original-${attr}`);
@@ -261,23 +285,9 @@ class BhashiniTranslator {
         });
 
         // Reset input values
-        document.querySelectorAll('input[type="text"], input[type="search"], textarea').forEach(input => {
-            if (input.dataset.originalValue) {
-                input.value = input.dataset.originalValue;
-            }
-        });
-
-        // Reset HTML elements
-        document.querySelectorAll('[data-translatable-html]').forEach(el => {
-            if (el.dataset.originalHtml) {
-                el.innerHTML = el.dataset.originalHtml;
-            }
-        });
-
-        // Reset complex elements
-        document.querySelectorAll('li, button').forEach(el => {
-            if (el.dataset.originalText) {
-                el.textContent = el.dataset.originalText;
+        document.querySelectorAll('input, textarea').forEach(el => {
+            if (el.dataset.originalValue) {
+                el.value = el.dataset.originalValue;
             }
         });
 
@@ -286,6 +296,9 @@ class BhashiniTranslator {
             this.observer.disconnect();
             this.observer = null;
         }
+        
+        // Clear queue
+        this.translationQueue = [];
     }
 }
 
