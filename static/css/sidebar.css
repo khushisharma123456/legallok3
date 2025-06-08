@@ -1,0 +1,23 @@
+.sidebar-item a {
+    color: var(--text-light) !important;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.sidebar-item a:hover {
+    color: var(--text-light) !important;
+    text-decoration: none !important;
+}
+
+.sidebar-item.active a {
+    color: var(--text-light) !important;
+    text-decoration: none !important;
+}
+
+.sidebar-item i {
+    width: 20px;
+    text-align: center;
+} 

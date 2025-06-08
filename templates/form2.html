@@ -116,6 +116,25 @@
             display: none;
         }
 
+        .sidebar-item a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .sidebar-item a:hover {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-item.active a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -611,6 +630,10 @@
             <a href="/community" class="sidebar-item">
                 <i class="fas fa-users"></i>
                 <span data-translatable>Community Forum</span>
+            </a>
+            <a href="/direct-urls" class="sidebar-item">
+                <i class="fas fa-landmark"></i>
+                <span data-translatable>Legal Institutions</span>
             </a>
             <a href="{{ url_for('filled_forms') }}" class="sidebar-item">
                 <i class="fas fa-gavel"></i>

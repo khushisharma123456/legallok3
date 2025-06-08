@@ -12,6 +12,7 @@
             --secondary-brown: #8b4513;
             --accent-brown: #d2b48c;
             --light-brown: #f5f5f5;
+            --text-light: #ffffff;
         }
         
         body {
@@ -104,9 +105,22 @@
         }
         
         .sidebar-item a {
-            color: white;
-            text-decoration: none;
-            flex: 1;
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .sidebar-item a:hover {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-item.active a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
         }
         
         .main-content {
@@ -277,6 +291,11 @@
             <div class="sidebar-item active">
                 <i class="fas fa-users"></i>
                 <a href="/community">Community Forum</a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-landmark"></i>
+                <a href="/direct-urls"><span>Legal Institutions</span></a>
             </div>
             
             <div class="sidebar-item">

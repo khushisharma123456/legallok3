@@ -14,6 +14,7 @@
             --text-color: #333;
             --light-gray: #f5f5f5;
             --white: #ffffff;
+            --text-light: #f9f9f9;
         }
         
         * {
@@ -145,6 +146,25 @@
         
         .sidebar-item.active i {
             color: var(--white);
+        }
+        
+        .sidebar-item a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .sidebar-item a:hover {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-item.active a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
         }
         
         /* Main Content */
@@ -448,9 +468,9 @@
     <div class="content-area">
         <!-- Side Navigation -->
         <div class="sidebar">
-            <div class="sidebar-item active">
+            <div class="sidebar-item">
                 <i class="fas fa-home"></i>
-                <span>Dashboard</span>
+                <a href="/dashboard"><span>Dashboard</span></a>
             </div>
             
             <div class="sidebar-item">
@@ -466,6 +486,11 @@
             <div class="sidebar-item">
                 <i class="fas fa-users"></i>
                 <a href="/community"><span>Community Forum</span></a>
+            </div>
+            
+            <div class="sidebar-item active">
+                <i class="fas fa-landmark"></i>
+                <a href="/direct-urls"><span>Legal Institutions</span></a>
             </div>
             
             <div class="sidebar-item">
@@ -3270,6 +3295,15 @@
     <script>
         // Existing filter functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Remove active class from all sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to Legal Institutions item
+            const legalInstitutionsItem = document.querySelector('.sidebar-item a[href="/direct-urls"]').parentElement;
+            legalInstitutionsItem.classList.add('active');
+
             const typeFilter = document.getElementById('institution-type');
             const locationFilter = document.getElementById('location');
             const cards = document.querySelectorAll('.institution-card');

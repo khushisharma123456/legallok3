@@ -748,6 +748,52 @@ def translate_proxy():
             'status': 'error'
         })
 
+# ----------------- GEMINI API -----------------
+@app.route('/api/chat', methods=['POST'])
+def chat_with_gemini():
+    try:
+        data = request.get_json()
+        user_message = data.get('message')
+        
+        if not user_message:
+            return jsonify({'error': 'No message provided'}), 400
+            
+        # Get the API key from environment variable
+        gemini_api_key = os.getenv('GEMINI_API_KEY')
+        if not gemini_api_key:
+            return jsonify({'error': 'Gemini API key not configured'}), 500
+            
+        headers = {
+            'Authorization': f'Bearer {gemini_api_key}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Call Gemini API
+        response = requests.post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+            headers=headers,
+            json={
+                "contents": [{
+                    "parts": [{
+                        "text": f"You are a legal assistant for Legal Lok. Please provide a helpful response to this legal question: {user_message}"
+                    }]
+                }]
+            }
+        )
+        
+        if response.status_code == 200:
+            response_data = response.json()
+            if 'candidates' in response_data and response_data['candidates']:
+                bot_response = response_data['candidates'][0]['content']['parts'][0]['text']
+                return jsonify({'response': bot_response})
+            else:
+                return jsonify({'error': 'Invalid response from Gemini API'}), 500
+        else:
+            return jsonify({'error': f'Gemini API error: {response.status_code}'}), 500
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 # ----------------- RUN -----------------
 
 if __name__ == "__main__":

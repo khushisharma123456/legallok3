@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal Lok - Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #5D4037; /* Dark brown */
@@ -138,12 +140,22 @@
         }
         
         .sidebar-item a {
-            color: inherit;
+            color: var(--text-light);
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 1rem;
             width: 100%;
+        }
+        
+        .sidebar-item a:hover {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .sidebar-item.active a {
+            color: var(--text-light);
+            text-decoration: none;
         }
         
         .sidebar-item i {
@@ -533,6 +545,11 @@
                     <i class="fas fa-users"></i>
                     <span data-translatable>Community Forum</span>
                 </a>
+            </div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-landmark"></i>
+                <a href="/direct-urls"><span>Legal Institutions</span></a>
             </div>
             
             <div class="sidebar-item">

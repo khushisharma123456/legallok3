@@ -220,6 +220,25 @@
             color: var(--accent-color);
         }
 
+        .sidebar-item a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .sidebar-item a:hover {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-item.active a {
+            color: var(--text-light) !important;
+            text-decoration: none !important;
+        }
+
         /* Main Content */
         .content-area {
             display: flex;
@@ -624,6 +643,11 @@
             </div>
             
             <div class="sidebar-item">
+                <i class="fas fa-landmark"></i>
+                <a href="/direct-urls"><span>Legal Institutions</span></a>
+            </div>
+            
+            <div class="sidebar-item">
                 <i class="fas fa-gavel"></i>
                 <a href="{{ url_for('filled_forms') }}"><span data-translatable>Petitions</span></a>
             </div>
@@ -738,22 +762,28 @@
             const loadingId = showLoading();
             
             try {
-                // Simulate API call with timeout
-                setTimeout(() => {
-                    // Remove loading indicator
-                    removeLoading(loadingId);
-                    
+                // Call the Gemini API endpoint
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading indicator
+                removeLoading(loadingId);
+                
+                if (response.ok) {
                     // Add bot response to chat
-                    const responses = [
-                        "Under Indian law, divorce procedures are governed by different acts depending on religion. For Hindus, it's covered under the Hindu Marriage Act, 1955. You'll need to file a petition in the appropriate family court with supporting documents.",
-                        "For property registration in India, you typically need: 1) Sale deed, 2) Title documents, 3) Property tax receipts, 4) Identity proofs, 5) Passport photos, and 6) Witnesses. The registration fee varies by state.",
-                        "Tenants in India are protected under the Rent Control Act of each state. Key rights include: protection from arbitrary eviction, fair rent control, and essential service maintenance. However, rights vary between states.",
-                        "To draft a valid will in India: 1) It must be in writing, 2) Signed by the testator, 3) Attested by two witnesses. Registration is optional but recommended. The Indian Succession Act, 1925 governs wills for most Indians."
-                    ];
-                    
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(randomResponse, 'bot');
-                }, 1500);
+                    addMessage(data.response, 'bot');
+                } else {
+                    // Handle error
+                    addMessage("I'm having trouble connecting to the legal database. Please try again later.", 'bot');
+                    console.error('Error:', data.error);
+                }
             } catch (error) {
                 console.error('Error:', error);
                 removeLoading(loadingId);
