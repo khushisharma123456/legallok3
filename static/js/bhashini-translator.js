@@ -40,16 +40,42 @@ class BhashiniTranslator {
 
     async translatePage() {
         const targetLanguage = document.getElementById('languageSelect').value;
+        const translateButton = document.getElementById('translateButton');
+        
+        // Update UI during translation
+        translateButton.disabled = true;
+        const spinner = document.createElement('i');
+        spinner.className = 'fas fa-spinner fa-spin';
+        translateButton.replaceChild(spinner, translateButton.querySelector('i'));
+
         if (targetLanguage === 'en') {
             this.resetOriginalContent();
+            translateButton.disabled = false;
+            translateButton.innerHTML = '<i class="fas fa-language"></i> <span data-translatable>Translate</span>';
             return;
         }
 
-        // Start observing DOM changes
-        this.startObservation(targetLanguage);
+        try {
+            // Start observing DOM changes
+            this.startObservation(targetLanguage);
 
-        // Initial translation of all content
-        await this.translateEntireDOM(targetLanguage);
+            // Initial translation of all content
+            await this.translateEntireDOM(targetLanguage);
+
+            // Ensure translate button text is translated
+            const translateTextSpan = document.querySelector('#translateButton [data-translatable]');
+            if (translateTextSpan) {
+                if (!translateTextSpan.dataset.originalText) {
+                    translateTextSpan.dataset.originalText = translateTextSpan.textContent;
+                }
+                translateTextSpan.textContent = await this.translate(translateTextSpan.dataset.originalText, targetLanguage);
+            }
+
+        } finally {
+            // Restore translate button state
+            translateButton.disabled = false;
+            translateButton.innerHTML = '<i class="fas fa-language"></i> <span data-translatable>Translate</span>';
+        }
     }
 
     startObservation(targetLanguage) {
@@ -102,6 +128,19 @@ class BhashiniTranslator {
 
         // Translate all attributes
         await this.translateAttributes(targetLanguage);
+
+        // Special handling for data-translatable elements
+        await this.handleTranslatableElements(targetLanguage);
+    }
+
+    async handleTranslatableElements(targetLanguage) {
+        const elements = document.querySelectorAll('[data-translatable]');
+        for (const element of elements) {
+            if (!element.dataset.originalText) {
+                element.dataset.originalText = element.textContent;
+            }
+            element.textContent = await this.translate(element.dataset.originalText, targetLanguage);
+        }
     }
 
     async translateElement(element, targetLanguage) {
@@ -133,6 +172,15 @@ class BhashiniTranslator {
 
         // Handle attributes in this element
         await this.translateAttributes(targetLanguage, element);
+
+        // Handle data-translatable elements in this subtree
+        const translatableElements = element.querySelectorAll('[data-translatable]');
+        for (const el of translatableElements) {
+            if (!el.dataset.originalText) {
+                el.dataset.originalText = el.textContent;
+            }
+            el.textContent = await this.translate(el.dataset.originalText, targetLanguage);
+        }
     }
 
     async translateAttributes(targetLanguage, root = document) {
@@ -178,6 +226,13 @@ class BhashiniTranslator {
             }
         });
 
+        // Reset data-translatable elements
+        document.querySelectorAll('[data-translatable]').forEach(el => {
+            if (el.dataset.originalText) {
+                el.textContent = el.dataset.originalText;
+            }
+        });
+
         // Disconnect observer
         if (this.observer) {
             this.observer.disconnect();
@@ -189,7 +244,7 @@ class BhashiniTranslator {
 // Initialize translator
 const bhashiniTranslator = new BhashiniTranslator();
 
-// Add this to your translate button click handler
-function handleTranslate() {
+// Add event listener for translate button
+document.getElementById('translateButton').addEventListener('click', () => {
     bhashiniTranslator.translatePage();
-}
+});
