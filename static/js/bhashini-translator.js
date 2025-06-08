@@ -3,7 +3,8 @@ class BhashiniTranslator {
         this.apiEndpoint = '/api/translate';
         this.serviceId = 'ai4bharat/indictrans-v2-all-gpu';
         this.translationCache = new Map();
-        this.originalContentMap = new WeakMap();
+        this.observedElements = new WeakSet();
+        this.observer = null;
     }
 
     async translate(text, targetLanguage) {
@@ -16,8 +17,6 @@ class BhashiniTranslator {
         }
 
         try {
-            console.log('Translating:', text, 'to', targetLanguage);
-            
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 15000);
             
@@ -41,38 +40,18 @@ class BhashiniTranslator {
 
             clearTimeout(timeoutId);
 
-            let data;
-            try {
-                data = await response.json();
-            } catch (jsonErr) {
-                const errText = await response.text();
-                console.error('Non-JSON response from server:', errText);
-                throw new Error('Translation service returned an invalid response.');
-            }
-            
+            const data = await response.json();
             if (!response.ok || data.error) {
-                const errorMsg = data.message || data.error || 'Translation failed';
-                console.error('Translation API Error:', data);
-                throw new Error(errorMsg);
+                throw new Error(data.message || data.error || 'Translation failed');
             }
 
-            let translatedText;
-            if (data?.target) {
-                translatedText = data.target;
-            } else if (data?.output && Array.isArray(data.output) && data.output.length > 0) {
-                translatedText = data.output[0]?.target;
-            }
-            
-            if (!translatedText) {
-                console.error('Response structure:', data);
-                throw new Error('No translation found in response');
-            }
-
+            const translatedText = data?.target || 
+                                (data?.output?.[0]?.target || text);
             this.translationCache.set(cacheKey, translatedText);
             return translatedText;
         } catch (error) {
-            console.error('Translation API error:', error);
-            return text; // Return original text if translation fails
+            console.error('Translation error:', error);
+            return text;
         }
     }
 
@@ -85,148 +64,163 @@ class BhashiniTranslator {
 
         const translateButton = document.getElementById('translateButton');
         translateButton.disabled = true;
-        translateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating...';
-        
-        const statusIndicator = this.createStatusIndicator('Preparing translation...');
-        
+        translateButton.textContent = 'Translating...';
+
         try {
-            // Get all text nodes in the document
-            const textNodes = this.getAllTextNodes(document.body);
+            // Setup MutationObserver to catch dynamic content
+            this.setupObserver(targetLanguage);
             
-            // First pass: store original content
-            for (const node of textNodes) {
-                this.storeOriginalText(node);
-            }
+            // Initial translation pass
+            await this.translateAllTextNodes(document.body, targetLanguage);
+            await this.translateAllAttributes(targetLanguage);
             
-            // Second pass: translate content
-            let translatedCount = 0;
-            const totalToTranslate = textNodes.length;
-            
-            for (const node of textNodes) {
-                statusIndicator.textContent = `Translating (${++translatedCount}/${totalToTranslate})...`;
-                const originalText = node.data;
-                if (originalText && originalText.trim()) {
-                    const translatedText = await this.translate(originalText.trim(), targetLanguage);
-                    node.data = translatedText;
-                }
-            }
-            
-            // Translate attributes (title, placeholder, alt, etc.)
-            await this.translateAttributes(targetLanguage, statusIndicator, translatedCount, totalToTranslate);
-            
-            statusIndicator.style.background = 'rgba(40,167,69,0.9)';
-            statusIndicator.textContent = 'Translation completed!';
+            // Special cases for common UI patterns
+            await this.handleSpecialCases(targetLanguage);
             
         } catch (error) {
             console.error('Translation error:', error);
-            statusIndicator.style.background = 'rgba(220,53,69,0.9)';
-            statusIndicator.textContent = 'Error: ' + error.message;
-            alert('Translation failed: ' + error.message);
         } finally {
             translateButton.disabled = false;
-            translateButton.innerHTML = '<i class="fas fa-language"></i> Translate';
-            
-            setTimeout(() => {
-                if (document.body.contains(statusIndicator)) {
-                    document.body.removeChild(statusIndicator);
-                }
-            }, 2000);
+            translateButton.textContent = 'Translate';
         }
     }
 
-    getAllTextNodes(element) {
-        const textNodes = [];
+    setupObserver(targetLanguage) {
+        if (this.observer) this.observer.disconnect();
+        
+        this.observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        this.translateAllTextNodes(node, targetLanguage);
+                        this.translateAllAttributes(targetLanguage, node);
+                    }
+                });
+            });
+        });
+
+        this.observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            characterData: true
+        });
+    }
+
+    async translateAllTextNodes(root, targetLanguage) {
         const walker = document.createTreeWalker(
-            element,
+            root,
             NodeFilter.SHOW_TEXT,
             {
                 acceptNode: (node) => {
-                    // Skip text nodes in script, style, and other non-content elements
-                    if (node.parentElement.tagName === 'SCRIPT' || 
-                        node.parentElement.tagName === 'STYLE' ||
-                        node.parentElement.tagName === 'NOSCRIPT' ||
-                        node.parentElement.tagName === 'IFRAME') {
+                    if (!node.textContent.trim() || 
+                        node.parentNode.tagName === 'SCRIPT' || 
+                        node.parentNode.tagName === 'STYLE' ||
+                        node.parentNode.tagName === 'NOSCRIPT' ||
+                        node.parentNode.tagName === 'IFRAME') {
                         return NodeFilter.FILTER_REJECT;
                     }
-                    // Only include nodes with actual text content
-                    return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
                 }
-            },
-            false
+            }
         );
-        
-        while (walker.nextNode()) {
-            textNodes.push(walker.currentNode);
+
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+
+        for (const node of nodes) {
+            if (!node.originalText) {
+                node.originalText = node.textContent;
+            }
+            const translated = await this.translate(node.textContent.trim(), targetLanguage);
+            node.textContent = translated;
         }
-        
-        return textNodes;
     }
 
-    storeOriginalText(node) {
-        if (!node.originalText) {
-            node.originalText = node.textContent;
-        }
-    }
-
-    async translateAttributes(targetLanguage, statusIndicator, translatedCount, totalToTranslate) {
-        const attributesToTranslate = ['title', 'placeholder', 'alt', 'aria-label'];
-        const elementsWithAttributes = [];
+    async translateAllAttributes(targetLanguage, root = document) {
+        const attributes = ['title', 'placeholder', 'alt', 'aria-label'];
+        const elements = root.querySelectorAll('*');
         
-        // Find all elements with translatable attributes
-        attributesToTranslate.forEach(attr => {
-            document.querySelectorAll(`[${attr}]`).forEach(el => {
-                if (!el.hasAttribute(`data-original-${attr}`)) {
-                    el.setAttribute(`data-original-${attr}`, el.getAttribute(attr));
+        for (const el of elements) {
+            for (const attr of attributes) {
+                if (el.hasAttribute(attr)) {
+                    const original = el.getAttribute(`data-original-${attr}`) || el.getAttribute(attr);
+                    el.setAttribute(`data-original-${attr}`, original);
+                    const translated = await this.translate(original, targetLanguage);
+                    el.setAttribute(attr, translated);
                 }
-                elementsWithAttributes.push({el, attr});
-            });
-        });
-        
-        // Translate the attributes
-        for (const {el, attr} of elementsWithAttributes) {
-            statusIndicator.textContent = `Translating ${attr} attributes (${++translatedCount}/${totalToTranslate + elementsWithAttributes.length})...`;
-            const originalValue = el.getAttribute(`data-original-${attr}`);
-            if (originalValue) {
-                const translatedValue = await this.translate(originalValue, targetLanguage);
-                el.setAttribute(attr, translatedValue);
             }
         }
     }
 
-    createStatusIndicator(initialText) {
-        const statusIndicator = document.createElement('div');
-        statusIndicator.style.position = 'fixed';
-        statusIndicator.style.top = '10px';
-        statusIndicator.style.right = '10px';
-        statusIndicator.style.padding = '8px 16px';
-        statusIndicator.style.background = 'rgba(0,0,0,0.7)';
-        statusIndicator.style.color = 'white';
-        statusIndicator.style.borderRadius = '4px';
-        statusIndicator.style.zIndex = '9999';
-        statusIndicator.textContent = initialText;
-        document.body.appendChild(statusIndicator);
-        return statusIndicator;
+    async handleSpecialCases(targetLanguage) {
+        // Handle common UI patterns that might need special attention
+        const specialSelectors = [
+            '.disclaimer-text',
+            '.welcome-message',
+            '.ai-assistant-text',
+            '.legal-topics-list'
+        ];
+
+        for (const selector of specialSelectors) {
+            const elements = document.querySelectorAll(selector);
+            for (const el of elements) {
+                if (!el.dataset.originalHtml) {
+                    el.dataset.originalHtml = el.innerHTML;
+                }
+                const translated = await this.translate(el.textContent.trim(), targetLanguage);
+                el.textContent = translated;
+            }
+        }
     }
 
     resetOriginalContent() {
-        // Restore text nodes
-        const textNodes = this.getAllTextNodes(document.body);
-        for (const node of textNodes) {
+        // Reset text nodes
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
             if (node.originalText) {
-                node.data = node.originalText;
+                node.textContent = node.originalText;
             }
         }
-        
-        // Restore attributes
-        const attributesToRestore = ['title', 'placeholder', 'alt', 'aria-label'];
-        attributesToRestore.forEach(attr => {
-            document.querySelectorAll(`[data-original-${attr}]`).forEach(el => {
-                const originalValue = el.getAttribute(`data-original-${attr}`);
-                if (originalValue) {
-                    el.setAttribute(attr, originalValue);
+
+        // Reset attributes
+        const attributes = ['title', 'placeholder', 'alt', 'aria-label'];
+        document.querySelectorAll('*').forEach(el => {
+            for (const attr of attributes) {
+                const original = el.getAttribute(`data-original-${attr}`);
+                if (original) {
+                    el.setAttribute(attr, original);
+                }
+            }
+        });
+
+        // Reset special cases
+        const specialSelectors = [
+            '.disclaimer-text',
+            '.welcome-message',
+            '.ai-assistant-text',
+            '.legal-topics-list'
+        ];
+
+        specialSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                if (el.dataset.originalHtml) {
+                    el.innerHTML = el.dataset.originalHtml;
                 }
             });
         });
+
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
+        }
     }
 }
 
