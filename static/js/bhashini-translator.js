@@ -90,51 +90,29 @@ class BhashiniTranslator {
         const statusIndicator = this.createStatusIndicator('Preparing translation...');
         
         try {
-            // Get all elements that might contain text
-            const allElements = document.querySelectorAll('body *:not(script):not(style):not(noscript):not(iframe)');
-            const textNodes = [];
+            // Get all text nodes in the document
+            const textNodes = this.getAllTextNodes(document.body);
             
-            // First pass: collect all text content and store originals
-            for (const element of allElements) {
-                this.storeOriginalContent(element);
-                
-                // Handle text content
-                if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
-                    textNodes.push(element);
-                }
-                
-                // Handle attributes
-                const translatableAttributes = ['placeholder', 'title', 'alt', 'aria-label'];
-                for (const attr of translatableAttributes) {
-                    if (element.hasAttribute(attr)) {
-                        this.storeOriginalAttribute(element, attr);
-                    }
-                }
+            // First pass: store original content
+            for (const node of textNodes) {
+                this.storeOriginalText(node);
             }
             
             // Second pass: translate content
             let translatedCount = 0;
-            const totalToTranslate = textNodes.length + 
-                document.querySelectorAll('[data-original-placeholder]').length +
-                document.querySelectorAll('[data-original-title]').length +
-                document.querySelectorAll('[data-original-alt]').length +
-                document.querySelectorAll('[data-original-aria-label]').length;
+            const totalToTranslate = textNodes.length;
             
-            // Translate text nodes
-            for (const element of textNodes) {
-                statusIndicator.textContent = `Translating text (${++translatedCount}/${totalToTranslate})...`;
-                const originalText = element.getAttribute('data-original-text');
-                if (originalText) {
-                    const translatedText = await this.translate(originalText, targetLanguage);
-                    element.textContent = translatedText;
+            for (const node of textNodes) {
+                statusIndicator.textContent = `Translating (${++translatedCount}/${totalToTranslate})...`;
+                const originalText = node.data;
+                if (originalText && originalText.trim()) {
+                    const translatedText = await this.translate(originalText.trim(), targetLanguage);
+                    node.data = translatedText;
                 }
             }
             
-            // Translate attributes
-            await this.translateAttributes('placeholder', targetLanguage, statusIndicator, translatedCount, totalToTranslate);
-            await this.translateAttributes('title', targetLanguage, statusIndicator, translatedCount, totalToTranslate);
-            await this.translateAttributes('alt', targetLanguage, statusIndicator, translatedCount, totalToTranslate);
-            await this.translateAttributes('aria-label', targetLanguage, statusIndicator, translatedCount, totalToTranslate);
+            // Translate attributes (title, placeholder, alt, etc.)
+            await this.translateAttributes(targetLanguage, statusIndicator, translatedCount, totalToTranslate);
             
             statusIndicator.style.background = 'rgba(40,167,69,0.9)';
             statusIndicator.textContent = 'Translation completed!';
@@ -156,28 +134,62 @@ class BhashiniTranslator {
         }
     }
 
-    async translateAttributes(attrName, targetLanguage, statusIndicator, translatedCount, totalToTranslate) {
-        const elements = document.querySelectorAll(`[data-original-${attrName}]`);
-        for (const element of elements) {
-            statusIndicator.textContent = `Translating ${attrName} (${++translatedCount}/${totalToTranslate})...`;
-            const originalValue = element.getAttribute(`data-original-${attrName}`);
+    getAllTextNodes(element) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: (node) => {
+                    // Skip text nodes in script, style, and other non-content elements
+                    if (node.parentElement.tagName === 'SCRIPT' || 
+                        node.parentElement.tagName === 'STYLE' ||
+                        node.parentElement.tagName === 'NOSCRIPT' ||
+                        node.parentElement.tagName === 'IFRAME') {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    // Only include nodes with actual text content
+                    return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+                }
+            },
+            false
+        );
+        
+        while (walker.nextNode()) {
+            textNodes.push(walker.currentNode);
+        }
+        
+        return textNodes;
+    }
+
+    storeOriginalText(node) {
+        if (!node.originalText) {
+            node.originalText = node.textContent;
+        }
+    }
+
+    async translateAttributes(targetLanguage, statusIndicator, translatedCount, totalToTranslate) {
+        const attributesToTranslate = ['title', 'placeholder', 'alt', 'aria-label'];
+        const elementsWithAttributes = [];
+        
+        // Find all elements with translatable attributes
+        attributesToTranslate.forEach(attr => {
+            document.querySelectorAll(`[${attr}]`).forEach(el => {
+                if (!el.hasAttribute(`data-original-${attr}`)) {
+                    el.setAttribute(`data-original-${attr}`, el.getAttribute(attr));
+                }
+                elementsWithAttributes.push({el, attr});
+            });
+        });
+        
+        // Translate the attributes
+        for (const {el, attr} of elementsWithAttributes) {
+            statusIndicator.textContent = `Translating ${attr} attributes (${++translatedCount}/${totalToTranslate + elementsWithAttributes.length})...`;
+            const originalValue = el.getAttribute(`data-original-${attr}`);
             if (originalValue) {
                 const translatedValue = await this.translate(originalValue, targetLanguage);
-                element.setAttribute(attrName, translatedValue);
+                el.setAttribute(attr, translatedValue);
             }
-        }
-    }
-
-    storeOriginalContent(element) {
-        if (!element.hasAttribute('data-original-text') && element.textContent.trim()) {
-            element.setAttribute('data-original-text', element.textContent.trim());
-        }
-    }
-
-    storeOriginalAttribute(element, attrName) {
-        const dataAttr = `data-original-${attrName}`;
-        if (!element.hasAttribute(dataAttr)) {
-            element.setAttribute(dataAttr, element.getAttribute(attrName));
         }
     }
 
@@ -197,23 +209,21 @@ class BhashiniTranslator {
     }
 
     resetOriginalContent() {
-        // Restore text content
-        const elementsWithOriginalText = document.querySelectorAll('[data-original-text]');
-        elementsWithOriginalText.forEach(element => {
-            const originalText = element.getAttribute('data-original-text');
-            if (originalText) {
-                element.textContent = originalText;
+        // Restore text nodes
+        const textNodes = this.getAllTextNodes(document.body);
+        for (const node of textNodes) {
+            if (node.originalText) {
+                node.data = node.originalText;
             }
-        });
+        }
         
         // Restore attributes
-        const attributesToRestore = ['placeholder', 'title', 'alt', 'aria-label'];
+        const attributesToRestore = ['title', 'placeholder', 'alt', 'aria-label'];
         attributesToRestore.forEach(attr => {
-            const elements = document.querySelectorAll(`[data-original-${attr}]`);
-            elements.forEach(element => {
-                const originalValue = element.getAttribute(`data-original-${attr}`);
+            document.querySelectorAll(`[data-original-${attr}]`).forEach(el => {
+                const originalValue = el.getAttribute(`data-original-${attr}`);
                 if (originalValue) {
-                    element.setAttribute(attr, originalValue);
+                    el.setAttribute(attr, originalValue);
                 }
             });
         });
