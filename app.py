@@ -552,6 +552,10 @@ def form_filling():
 def lawyer_cases():
     return render_template('lawyer cases.html')
 
+@app.route('/direct-urls')
+def direct-urls():
+    return render_template('direct-urls.html')
+
 @app.route('/lawyer_settings')
 def lawyer_settings():
     return render_template('lawyer settings.html')
