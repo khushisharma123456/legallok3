@@ -3,19 +3,30 @@ class BhashiniTranslator {
         this.apiEndpoint = '/api/translate';
         this.translationCache = new Map();
         this.observer = null;
-        this.isTranslating = false;
-        this.translationQueue = [];
+        this.debugMode = true; // Enable to see exactly what's being translated
+    }
+
+    logDebug(message) {
+        if (this.debugMode) {
+            console.log('[DEBUG]', message);
+        }
     }
 
     async translate(text, targetLanguage) {
-        if (!text || !text.trim()) return text;
+        if (!text || !text.trim()) {
+            this.logDebug(`Skipping empty text for ${targetLanguage}`);
+            return text;
+        }
         
         const cacheKey = `${text}_${targetLanguage}`;
         if (this.translationCache.has(cacheKey)) {
+            this.logDebug(`Using cached translation for: "${text}"`);
             return this.translationCache.get(cacheKey);
         }
 
         try {
+            this.logDebug(`Translating: "${text}" to ${targetLanguage}`);
+            
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -32,6 +43,8 @@ class BhashiniTranslator {
 
             const data = await response.json();
             const translatedText = data?.target || data?.output?.[0]?.target || text;
+            
+            this.logDebug(`Translation result for "${text}": "${translatedText}"`);
             this.translationCache.set(cacheKey, translatedText);
             return translatedText;
         } catch (error) {
@@ -41,64 +54,53 @@ class BhashiniTranslator {
     }
 
     async translatePage() {
-        if (this.isTranslating) return;
-        this.isTranslating = true;
-
         const targetLanguage = document.getElementById('languageSelect').value;
+        if (targetLanguage === 'en') {
+            this.resetOriginalContent();
+            return;
+        }
+
         const translateButton = document.getElementById('translateButton');
-        
-        // Update UI during translation
         translateButton.disabled = true;
-        const originalButtonContent = translateButton.innerHTML;
         translateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating...';
 
         try {
-            // Start observing DOM changes
-            this.startObservation(targetLanguage);
-
-            // Create status indicator
-            const statusIndicator = this.createStatusIndicator('Starting translation...');
-
-            // Get ALL elements with text content
-            const allElements = this.getAllTextElements();
+            // Create debug container
+            const debugContainer = this.createDebugContainer();
             
-            // Process in batches to avoid UI freeze
-            const batchSize = 10;
-            for (let i = 0; i < allElements.length; i += batchSize) {
-                const batch = allElements.slice(i, i + batchSize);
-                await this.processBatch(batch, targetLanguage);
-                
-                // Update status
-                statusIndicator.textContent = `Translating... (${Math.min(i + batchSize, allElements.length)}/${allElements.length})`;
-                await new Promise(resolve => setTimeout(resolve, 50)); // Small delay to keep UI responsive
-            }
-
-            // Final update
-            statusIndicator.style.background = 'rgba(40,167,69,0.9)';
-            statusIndicator.textContent = 'Translation completed!';
-            setTimeout(() => statusIndicator.remove(), 2000);
-
+            // 1. First get ALL text content in the document
+            const { elements, textNodes } = this.findAllTextContent();
+            debugContainer.innerHTML += `<p>Found ${elements.length} elements and ${textNodes.length} text nodes to translate</p>`;
+            
+            // 2. Store original content
+            this.storeOriginalContent(elements, textNodes, debugContainer);
+            
+            // 3. Translate everything
+            await this.translateAllContent(elements, textNodes, targetLanguage, debugContainer);
+            
+            debugContainer.innerHTML += `<p style="color:green;">Translation completed successfully!</p>`;
+            
         } catch (error) {
-            console.error('Translation error:', error);
-            const statusIndicator = this.createStatusIndicator('Translation failed!');
-            statusIndicator.style.background = 'rgba(220,53,69,0.9)';
-            setTimeout(() => statusIndicator.remove(), 3000);
+            console.error('Translation failed:', error);
+            const debugContainer = document.getElementById('translation-debug');
+            if (debugContainer) {
+                debugContainer.innerHTML += `<p style="color:red;">Error: ${error.message}</p>`;
+            }
         } finally {
             translateButton.disabled = false;
-            translateButton.innerHTML = originalButtonContent;
-            this.isTranslating = false;
+            translateButton.innerHTML = '<i class="fas fa-language"></i> Translate';
         }
     }
 
-    getAllTextElements() {
-        // Get all elements that might contain text
-        const elements = Array.from(document.querySelectorAll('body *')).filter(el => {
-            // Skip script, style, and other non-content elements
-            if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'NOSCRIPT') {
+    findAllTextContent() {
+        // Get all elements with text content
+        const allElements = Array.from(document.querySelectorAll('body *')).filter(el => {
+            // Skip these elements
+            if (['SCRIPT', 'STYLE', 'NOSCRIPT', 'IFRAME', 'OPTION'].includes(el.tagName)) {
                 return false;
             }
             
-            // Check if element has text content
+            // Include elements with text content or translatable attributes
             return el.textContent.trim().length > 0 || 
                    el.hasAttribute('placeholder') || 
                    el.hasAttribute('title') || 
@@ -106,7 +108,7 @@ class BhashiniTranslator {
                    el.hasAttribute('aria-label');
         });
         
-        // Also include all text nodes
+        // Get all text nodes
         const walker = document.createTreeWalker(
             document.body,
             NodeFilter.SHOW_TEXT,
@@ -125,134 +127,112 @@ class BhashiniTranslator {
         const textNodes = [];
         while (walker.nextNode()) textNodes.push(walker.currentNode);
         
-        return [...elements, ...textNodes];
+        return { elements: allElements, textNodes };
     }
 
-    async processBatch(batch, targetLanguage) {
-        const promises = [];
-        
-        for (const element of batch) {
-            if (element.nodeType === Node.TEXT_NODE) {
-                promises.push(this.processTextNode(element, targetLanguage));
-            } else {
-                promises.push(this.processElement(element, targetLanguage));
+    storeOriginalContent(elements, textNodes, debugContainer) {
+        // Store original element content
+        elements.forEach(el => {
+            if (!el.dataset.originalText && el.textContent.trim()) {
+                el.dataset.originalText = el.textContent;
+                debugContainer.innerHTML += `<p>Stored original for element: ${el.tagName} - "${el.textContent.trim()}"</p>`;
             }
-        }
-        
-        await Promise.all(promises);
-    }
-
-    async processTextNode(node, targetLanguage) {
-        if (!node.originalText) {
-            node.originalText = node.textContent;
-        }
-        node.textContent = await this.translate(node.textContent.trim(), targetLanguage);
-    }
-
-    async processElement(element, targetLanguage) {
-        // Handle text content
-        if (element.textContent.trim() && !element.dataset.originalText) {
-            element.dataset.originalText = element.textContent;
-            const translated = await this.translate(element.textContent.trim(), targetLanguage);
             
-            // Preserve HTML structure if needed
-            if (element.children.length > 0) {
-                const textNodes = Array.from(element.childNodes).filter(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());
-                if (textNodes.length > 0) {
-                    textNodes[0].textContent = translated;
-                    for (let i = 1; i < textNodes.length; i++) {
-                        textNodes[i].textContent = '';
+            // Store attribute content
+            ['placeholder', 'title', 'alt', 'aria-label'].forEach(attr => {
+                if (el.hasAttribute(attr)) {
+                    const value = el.getAttribute(attr);
+                    if (value && !el.hasAttribute(`data-original-${attr}`)) {
+                        el.setAttribute(`data-original-${attr}`, value);
+                        debugContainer.innerHTML += `<p>Stored original ${attr} for ${el.tagName}: "${value}"</p>`;
                     }
                 }
-            } else {
-                element.textContent = translated;
-            }
-        }
+            });
+        });
         
-        // Handle attributes
-        const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
-        for (const attr of attributes) {
-            if (element.hasAttribute(attr)) {
-                const original = element.getAttribute(`data-original-${attr}`) || element.getAttribute(attr);
-                element.setAttribute(`data-original-${attr}`, original);
-                const translated = await this.translate(original, targetLanguage);
-                element.setAttribute(attr, translated);
+        // Store original text nodes
+        textNodes.forEach(node => {
+            if (!node.originalText) {
+                node.originalText = node.textContent;
+                debugContainer.innerHTML += `<p>Stored original text node: "${node.textContent.trim()}"</p>`;
             }
-        }
-        
-        // Handle input values
-        if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') && element.value) {
-            if (!element.dataset.originalValue) {
-                element.dataset.originalValue = element.value;
-            }
-            element.value = await this.translate(element.value, targetLanguage);
-        }
+        });
     }
 
-    createStatusIndicator(text) {
-        const indicator = document.createElement('div');
-        indicator.style.position = 'fixed';
-        indicator.style.bottom = '20px';
-        indicator.style.right = '20px';
-        indicator.style.padding = '10px 20px';
-        indicator.style.background = 'rgba(0,0,0,0.8)';
-        indicator.style.color = 'white';
-        indicator.style.borderRadius = '5px';
-        indicator.style.zIndex = '9999';
-        indicator.textContent = text;
-        document.body.appendChild(indicator);
-        return indicator;
-    }
-
-    startObservation(targetLanguage) {
-        if (this.observer) this.observer.disconnect();
-        
-        this.observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
-                        this.translationQueue.push({ node, targetLanguage });
+    async translateAllContent(elements, textNodes, targetLanguage, debugContainer) {
+        // Translate elements
+        for (const el of elements) {
+            try {
+                // Translate text content
+                if (el.textContent.trim()) {
+                    const original = el.dataset.originalText || el.textContent;
+                    const translated = await this.translate(original, targetLanguage);
+                    el.textContent = translated;
+                    debugContainer.innerHTML += `<p>Translated element ${el.tagName}: "${original}" → "${translated}"</p>`;
+                }
+                
+                // Translate attributes
+                ['placeholder', 'title', 'alt', 'aria-label'].forEach(async attr => {
+                    if (el.hasAttribute(attr)) {
+                        const original = el.getAttribute(`data-original-${attr}`) || el.getAttribute(attr);
+                        const translated = await this.translate(original, targetLanguage);
+                        el.setAttribute(attr, translated);
+                        debugContainer.innerHTML += `<p>Translated ${attr} for ${el.tagName}: "${original}" → "${translated}"</p>`;
                     }
                 });
-            });
-            
-            if (!this.isProcessingQueue) {
-                this.processQueue();
-            }
-        });
-
-        this.observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: false,
-            characterData: false
-        });
-    }
-
-    async processQueue() {
-        this.isProcessingQueue = true;
-        
-        while (this.translationQueue.length > 0) {
-            const { node, targetLanguage } = this.translationQueue.shift();
-            
-            try {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    await this.processTextNode(node, targetLanguage);
-                } else {
-                    await this.processElement(node, targetLanguage);
-                }
             } catch (error) {
-                console.error('Error processing node:', error);
+                debugContainer.innerHTML += `<p style="color:orange;">Error translating ${el.tagName}: ${error.message}</p>`;
             }
-            
-            // Small delay to keep UI responsive
-            await new Promise(resolve => setTimeout(resolve, 10));
         }
         
-        this.isProcessingQueue = false;
+        // Translate text nodes
+        for (const node of textNodes) {
+            try {
+                const original = node.originalText || node.textContent;
+                const translated = await this.translate(original, targetLanguage);
+                node.textContent = translated;
+                debugContainer.innerHTML += `<p>Translated text node: "${original}" → "${translated}"</p>`;
+            } catch (error) {
+                debugContainer.innerHTML += `<p style="color:orange;">Error translating text node: ${error.message}</p>`;
+            }
+        }
+    }
+
+    createDebugContainer() {
+        let debugContainer = document.getElementById('translation-debug');
+        if (!debugContainer) {
+            debugContainer = document.createElement('div');
+            debugContainer.id = 'translation-debug';
+            debugContainer.style.position = 'fixed';
+            debugContainer.style.bottom = '0';
+            debugContainer.style.left = '0';
+            debugContainer.style.width = '100%';
+            debugContainer.style.height = '200px';
+            debugContainer.style.overflow = 'auto';
+            debugContainer.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            debugContainer.style.color = 'white';
+            debugContainer.style.padding = '10px';
+            debugContainer.style.zIndex = '9999';
+            debugContainer.style.borderTop = '2px solid red';
+            document.body.appendChild(debugContainer);
+        }
+        debugContainer.innerHTML = '<h3>Translation Debugger</h3>';
+        return debugContainer;
     }
 
     resetOriginalContent() {
+        // Reset elements
+        document.querySelectorAll('[data-original-text]').forEach(el => {
+            el.textContent = el.dataset.originalText;
+        });
+        
+        // Reset attributes
+        ['placeholder', 'title', 'alt', 'aria-label'].forEach(attr => {
+            document.querySelectorAll(`[data-original-${attr}]`).forEach(el => {
+                el.setAttribute(attr, el.getAttribute(`data-original-${attr}`));
+            });
+        });
+        
         // Reset text nodes
         const walker = document.createTreeWalker(
             document.body,
@@ -260,45 +240,19 @@ class BhashiniTranslator {
             null,
             false
         );
-
+        
         while (walker.nextNode()) {
             const node = walker.currentNode;
             if (node.originalText) {
                 node.textContent = node.originalText;
             }
         }
-
-        // Reset elements
-        document.querySelectorAll('[data-original-text]').forEach(el => {
-            el.textContent = el.dataset.originalText;
-        });
-
-        // Reset attributes
-        const attributes = ['placeholder', 'title', 'alt', 'aria-label'];
-        document.querySelectorAll('*').forEach(el => {
-            for (const attr of attributes) {
-                const original = el.getAttribute(`data-original-${attr}`);
-                if (original) {
-                    el.setAttribute(attr, original);
-                }
-            }
-        });
-
-        // Reset input values
-        document.querySelectorAll('input, textarea').forEach(el => {
-            if (el.dataset.originalValue) {
-                el.value = el.dataset.originalValue;
-            }
-        });
-
-        // Disconnect observer
-        if (this.observer) {
-            this.observer.disconnect();
-            this.observer = null;
-        }
         
-        // Clear queue
-        this.translationQueue = [];
+        // Remove debug container
+        const debugContainer = document.getElementById('translation-debug');
+        if (debugContainer) {
+            debugContainer.remove();
+        }
     }
 }
 
