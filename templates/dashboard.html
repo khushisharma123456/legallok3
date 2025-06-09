@@ -679,13 +679,12 @@
                 <div class="card-header">
                     <h2><i class="fas fa-newspaper"></i> <span data-translatable>Popular Legal News</span></h2>
                 </div>
-                <div class="card-body">
-                    <div id="articles-container" class="articles-grid">
+                <div class="card-body">                    <div id="articles-container" class="articles-grid">
                         <div class="loading-articles">
-                            <i class="fas fa-spinner fa-spin"></i> Loading articles...
+                            <i class="fas fa-spinner fa-spin"></i> <span data-translatable>Loading articles...</span>
                         </div>
                     </div>
-                    <button id="load-more" class="btn btn-block" style="display: none; margin-top: 1.5rem;">Load More Articles</button>
+                    <button id="load-more" class="btn btn-block" style="display: none; margin-top: 1.5rem;" data-translatable>Load More Articles</button>
                 </div>
             </div>
         </div>
@@ -728,17 +727,16 @@
             
             sampleArticles.forEach(article => {
                 const articleCard = document.createElement('div');
-                articleCard.className = 'article-card';
-                articleCard.innerHTML = `
+                articleCard.className = 'article-card';                articleCard.innerHTML = `
                     <div class="article-image">
                         <i class="fas fa-newspaper"></i>
                     </div>
                     <div class="article-content">
-                        <h3>${article.title}</h3>
-                        <p>${article.excerpt}</p>
+                        <h3 data-translatable>${article.title}</h3>
+                        <p data-translatable>${article.excerpt}</p>
                         <div class="article-meta">
-                            <span>${article.category}</span>
-                            <span>${article.date}</span>
+                            <span data-translatable>${article.category}</span>
+                            <span data-translatable>${article.date}</span>
                         </div>
                     </div>
                 `;

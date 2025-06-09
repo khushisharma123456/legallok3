@@ -18,7 +18,8 @@ class BhashiniTranslator {
             // Add request timeout with AbortController
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-              const response = await fetch(this.apiEndpoint, {
+            
+            const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,6 +36,8 @@ class BhashiniTranslator {
                     task: "translation"
                 })
             });
+
+            clearTimeout(timeoutId); // Clear timeout if request completes
 
             let data;
             try {
@@ -83,11 +86,10 @@ class BhashiniTranslator {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        source: sourceText,
-                        target: targetLang,
+                        source: text,
+                        target: targetLanguage,
                         fallback_only: true  // Request only mock translations
-                    }),
-                    signal: this.abortController.signal
+                    })
                 });
                 
                 if (fallbackResponse.ok) {
@@ -103,8 +105,8 @@ class BhashiniTranslator {
             }
             
             // If all else fails, return original text
-            console.warn('No translation available, returning original text:', sourceText);
-            return sourceText;
+            console.warn('No translation available, returning original text:', text);
+            return text;
         }
     }    async translatePage() {
         const targetLanguage = document.getElementById('languageSelect').value;
